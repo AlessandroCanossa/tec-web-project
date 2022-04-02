@@ -9,6 +9,8 @@ import FormControl from "react-bootstrap/FormControl";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 
+const logged = false;
+
 const MyNavbar = () => {
   return (
     <Navbar bg="dark" variant="dark">
@@ -24,25 +26,31 @@ const MyNavbar = () => {
             <a className="nav-link">Popular</a>
           </Link>
         </Nav>
-
         <Form className="d-flex me-5" method="get" action="">
           {/* TODO: set action to get the search */}
           <FormControl
             type="search"
             placeholder="Search"
-            className="me-2 bg-dark"
+            className="me-2 bg-dark text-white"
           />
           <Button type="submit" variant="outline-success" className="me-2">
             Search
           </Button>
         </Form>
 
-        <Link href="/account">
-          <Button variant="outline-light">
-            <FontAwesomeIcon icon={faUser} className="me-2"></FontAwesomeIcon>
-            Username
-          </Button>
-        </Link>
+        {logged ? (
+          <Link href="/account">
+            <Button variant="outline-light">
+              <FontAwesomeIcon icon={faUser} className="me-2"></FontAwesomeIcon>
+              Username
+            </Button>
+          </Link>
+        ) : (
+          <>
+            <Button variant="light" className="me-2">Log in</Button>
+            <Button variant="outline-light">Sign up</Button>
+          </>
+        )}
       </Container>
     </Navbar>
   );
