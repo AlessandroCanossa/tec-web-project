@@ -22,6 +22,7 @@ const Layout = ({
         <MyNavbar />
       </header>
       <main>{children}</main>
+      <footer></footer>
     </>
   );
 };
