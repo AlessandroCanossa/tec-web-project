@@ -7,11 +7,16 @@ import Button from "react-bootstrap/Button";
 import FormControl from "react-bootstrap/FormControl";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
 
-const logged = false;
+import LoginModal from "./modals/login";
+
+let logged = false;
 
 const MyNavbar = () => {
+  const [modalShow, setModalShow] = useState(false);
+
   return (
     <Navbar bg="dark" variant="dark">
       <Container>
@@ -32,23 +37,32 @@ const MyNavbar = () => {
             type="search"
             placeholder="Search"
             className="me-2 bg-dark text-white"
-          />
-          <Button type="submit" variant="outline-success" className="me-2">
-            Search
+            style={{border: 0, borderBottom: '1px solid', borderRadius: 0}}
+          /> 
+          <Button type="submit" variant="outline-light" className="me-2" style={{border: 0}}>
+            <FontAwesomeIcon icon={faSearch}/>
           </Button>
         </Form>
+        
 
         {logged ? (
           <Link href="/account">
             <Button variant="outline-light">
               <FontAwesomeIcon icon={faUser} className="me-2"></FontAwesomeIcon>
-              Username
+              <span>Username</span>
             </Button>
           </Link>
         ) : (
           <>
-            <Button variant="light" className="me-2">Log in</Button>
+            <Button
+              variant="light"
+              className="me-2"
+              onClick={() => setModalShow(true)}
+            >
+              Log in
+            </Button>
             <Button variant="outline-light">Sign up</Button>
+            <LoginModal show={modalShow} onHide={() => setModalShow(false)}/>
           </>
         )}
       </Container>
