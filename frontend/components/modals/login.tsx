@@ -9,22 +9,18 @@ import {
   Row,
   Col,
 } from "react-bootstrap";
-import Image from "next/image";
+import styles from "./login.module.css";
 
 const LoginModal = ({ ...props }) => {
   return (
     <Modal
       {...props}
-      backdrop="static"
       aria-labelledby="contained-modal-title-vcenter"
       centered
-      contentClassName="bg-dark text-white"
+      contentClassName=""
     >
-      <Modal.Header closeButton closeVariant="white">
-        <Modal.Title
-          id="contained-modal-title-vcenter"
-          style={{ marginLeft: "auto" }}
-        >
+      <Modal.Header>
+        <Modal.Title id="contained-modal-title-vcenter" className={styles.title}>
           Sign in
         </Modal.Title>
       </Modal.Header>
@@ -34,12 +30,7 @@ const LoginModal = ({ ...props }) => {
             <Form.Control
               type="email"
               placeholder="Email"
-              className="validate bg-dark text-white"
-              style={{
-                border: 0,
-                borderBottom: "1px solid",
-                borderRadius: 0,
-              }}
+              className={`validate, ${styles.form}`}
             />
           </FloatingLabel>
           <FloatingLabel
@@ -50,11 +41,10 @@ const LoginModal = ({ ...props }) => {
             <Form.Control
               type="password"
               placeholder="Password"
-              className="validate bg-dark text-white"
-              style={{ border: 0, borderBottom: "1px solid", borderRadius: 0 }}
+              className={`validate, ${styles.form}`}
             />
             <Link href="#">
-              <a style={{ color: "#adb5bd" }}>Forgot password?</a>
+              <a className={styles.forgot_password}>Forgot password?</a>
             </Link>
           </FloatingLabel>
 
@@ -64,9 +54,8 @@ const LoginModal = ({ ...props }) => {
           <Form.Group className="mb-3 text-center" controlId="formLoginButton">
             <Button
               type="submit"
-              variant="light"
+              variant="dark"
               className="btn-block "
-              style={{ marginLeft: "auto" }}
               onClick={props.onHide}
             >
               Login
@@ -74,10 +63,7 @@ const LoginModal = ({ ...props }) => {
           </Form.Group>
         </Form>
       </Modal.Body>
-      <Modal.Footer
-        className="justify-content-center"
-        // style={{ display: "block" }}
-      >
+      <Modal.Footer className={`justify-content-center, ${styles.footer}`}>
         <Container fluid>
           <Row className="justify-content-md-center">
             <Col className="text-center">
@@ -85,53 +71,32 @@ const LoginModal = ({ ...props }) => {
             </Col>
           </Row>
           <Row className="justify-content-md-center">
-            <Col className="text-center">
+          <Col className="text-center">
               <Link href="/">
-                <Button
-                  variant="light"
-                  style={{
-                    borderRadius: "100%",
-                    height: "3rem",
-                    width: "3rem",
-                  }}
-                >
+                <Button variant="dark" className={styles.icon_btn}>
                   <FontAwesomeIcon
                     icon={"fa-brands fa-google"}
-                    style={{ height: "1.5em" }}
+                    className={styles.icon}
                   />
                 </Button>
               </Link>
             </Col>
             <Col className="text-center">
               <Link href="/">
-                <Button
-                  variant="light"
-                  style={{
-                    borderRadius: "100%",
-                    height: "3rem",
-                    width: "3rem",
-                  }}
-                >
+                <Button variant="dark" className={styles.icon_btn}>
                   <FontAwesomeIcon
                     icon={"fa-brands fa-facebook-f"}
-                    style={{ height: "1.5em" }}
+                    className={styles.icon}
                   />
                 </Button>
               </Link>
             </Col>
             <Col className="text-center">
               <Link href="/">
-                <Button
-                  variant="light"
-                  style={{
-                    borderRadius: "100%",
-                    height: "3rem",
-                    width: "3rem",
-                  }}
-                >
+                <Button variant="dark" className={styles.icon_btn}>
                   <FontAwesomeIcon
                     icon={"fa-brands fa-twitter"}
-                    style={{ height: "1.5em" }}
+                    className={styles.icon}
                   />
                 </Button>
               </Link>

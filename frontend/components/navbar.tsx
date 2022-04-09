@@ -11,11 +11,15 @@ import { faUser, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 
 import LoginModal from "./modals/login";
+import SignupModal from "./modals/signup";
+
+import styles from "./navbar.module.css";
 
 let logged = false;
 
 const MyNavbar = () => {
-  const [modalShow, setModalShow] = useState(false);
+  const [loginModalShow, setLoginModalShow] = useState(false);
+  const [signupModalShow, setSignupModalShow] = useState(false);
 
   return (
     <Navbar bg="dark" variant="dark">
@@ -36,14 +40,16 @@ const MyNavbar = () => {
           <FormControl
             type="search"
             placeholder="Search"
-            className="me-2 bg-dark text-white"
-            style={{border: 0, borderBottom: '1px solid', borderRadius: 0}}
-          /> 
-          <Button type="submit" variant="outline-light" className="me-2" style={{border: 0}}>
-            <FontAwesomeIcon icon={faSearch}/>
+            className={`me-2 bg-dark text-white ${styles.search_bar}`}
+          />
+          <Button
+            type="submit"
+            variant="outline-light"
+            className={`me-2 ${styles.search_btn}`}
+          >
+            <FontAwesomeIcon icon={faSearch} />
           </Button>
         </Form>
-        
 
         {logged ? (
           <Link href="/account">
@@ -55,14 +61,26 @@ const MyNavbar = () => {
         ) : (
           <>
             <Button
-              variant="light"
+              variant="outline-light"
               className="me-2"
-              onClick={() => setModalShow(true)}
+              onClick={() => setLoginModalShow(true)}
             >
               Log in
             </Button>
-            <Button variant="outline-light">Sign up</Button>
-            <LoginModal show={modalShow} onHide={() => setModalShow(false)}/>
+            <Button
+              variant="light"
+              onClick={() => setSignupModalShow(true)}
+            >
+              Sign up
+            </Button>
+            <LoginModal
+              show={loginModalShow}
+              onHide={() => setLoginModalShow(false)}
+            />
+            <SignupModal
+              show={signupModalShow}
+              onHide={() => setSignupModalShow(false)}
+            />
           </>
         )}
       </Container>
