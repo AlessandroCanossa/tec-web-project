@@ -20,11 +20,11 @@ const LoginModal = ({ ...props }) => {
       contentClassName=""
     >
       <Modal.Header>
-        <Modal.Title id="contained-modal-title-vcenter" className={styles.title}>
+        <Modal.Title id="contained-modal-title-vcenter" className="mx-auto">
           Sign in
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body className="mx-4">
         <Form action="/">
           <FloatingLabel label="Email" className="mb-3" controlId="formEmail">
             <Form.Control
@@ -63,7 +63,7 @@ const LoginModal = ({ ...props }) => {
           </Form.Group>
         </Form>
       </Modal.Body>
-      <Modal.Footer className={`justify-content-center, ${styles.footer}`}>
+      <Modal.Footer className="justify-content-center pb-4">
         <Container fluid>
           <Row className="justify-content-md-center">
             <Col className="text-center">
@@ -71,7 +71,7 @@ const LoginModal = ({ ...props }) => {
             </Col>
           </Row>
           <Row className="justify-content-md-center">
-          <Col className="text-center">
+            <Col className="text-center">
               <Link href="/">
                 <Button variant="dark" className={styles.icon_btn}>
                   <FontAwesomeIcon
