@@ -10,6 +10,10 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script
+          src="https://kit.fontawesome.com/a39413488b.js"
+          crossOrigin="anonymous"
+        ></script>
       </Head>
       <Component {...pageProps} />
     </>
