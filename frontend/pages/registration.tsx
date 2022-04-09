@@ -1,10 +1,24 @@
 import Head from "next/head";
 import { NextPage } from "next/types";
 import { Button, Container, FloatingLabel, Form, Row } from "react-bootstrap";
+import { FocusEvent, useState } from "react";
+
 import Layout from "../components/layout";
 import styles from "../components/modals/login.module.css";
 
 const Registration: NextPage = () => {
+  const [emailError, setEmailError] = useState("");
+
+  const validateEmail = (e: FocusEvent<HTMLInputElement>) => {
+    const regex =
+      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    const value = e.target.value;
+
+    if (!value || regex.test(value) === false) {
+      setEmailError("error");
+    }
+  };
+
   return (
     <Layout>
       <Head>
@@ -43,7 +57,9 @@ const Registration: NextPage = () => {
                 placeholder="Email"
                 className={`validate ${styles.form}`}
                 required
+                onBlur={validateEmail}
               />
+              <Form.Text>{emailError}</Form.Text>
             </FloatingLabel>
             <FloatingLabel
               label="Password"
