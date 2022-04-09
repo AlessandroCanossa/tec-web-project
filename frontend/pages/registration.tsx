@@ -1,6 +1,8 @@
 import Head from "next/head";
 import { NextPage } from "next/types";
+import { Button, Container, FloatingLabel, Form, Row } from "react-bootstrap";
 import Layout from "../components/layout";
+import styles from "../components/modals/login.module.css";
 
 const Registration: NextPage = () => {
   return (
@@ -11,7 +13,78 @@ const Registration: NextPage = () => {
         {/* <link rel="icon" href="/favicon.ico" /> */}
       </Head>
 
-      
+      <Container
+        className="narrow mb-4 mt-5 p-3"
+        style={{ backgroundColor: "white" }}
+      >
+        <Row className="items-center mb-4">
+          <h2 className="font-header">Create account</h2>
+        </Row>
+        <Row>
+          <Form action="/" noValidate>
+            <Form.Text className="mb-0">
+              Your username must be unique and will be visible to other users.
+            </Form.Text>
+            <FloatingLabel
+              label="Username"
+              className="mb-3"
+              controlId="formUsername"
+            >
+              <Form.Control
+                type="text"
+                placeholder="Username"
+                className={`validate ${styles.form} md-input`}
+                required
+              />
+            </FloatingLabel>
+            <FloatingLabel label="Email" className="mb-3" controlId="formEmail">
+              <Form.Control
+                type="email"
+                placeholder="Email"
+                className={`validate ${styles.form}`}
+                required
+              />
+            </FloatingLabel>
+            <FloatingLabel
+              label="Password"
+              className="mb-3"
+              controlId="formPassword"
+            >
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                className={`validate ${styles.form}`}
+                required
+              />
+            </FloatingLabel>
+            <FloatingLabel
+              label="Confirm password"
+              className="mb-3"
+              controlId="formConfirmPassword"
+            >
+              <Form.Control
+                type="password"
+                placeholder="Confirm password"
+                className={`validate ${styles.form}`}
+                required
+              />
+            </FloatingLabel>
+            <Form.Group
+              className="mb-3 text-center"
+              controlId="formLoginButton"
+            >
+              <Button
+                type="submit"
+                variant="dark"
+                className="btn-block mt-3"
+                // onClick={props.onHide}
+              >
+                Create account
+              </Button>
+            </Form.Group>
+          </Form>
+        </Row>
+      </Container>
     </Layout>
   );
 };

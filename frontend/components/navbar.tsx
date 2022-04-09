@@ -20,7 +20,7 @@ const MyNavbar = () => {
   const [loginModalShow, setLoginModalShow] = useState(false);
 
   return (
-    <Navbar bg="dark" variant="dark">
+    <Navbar bg="dark" variant="dark" expand="lg" >
       <Container>
         <Link href="/">
           <a className="navbar-brand">Home</a>
