@@ -11,7 +11,6 @@ import { faUser, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 
 import LoginModal from "./modals/login";
-import SignupModal from "./modals/signup";
 
 import styles from "./navbar.module.css";
 
@@ -19,7 +18,6 @@ let logged = false;
 
 const MyNavbar = () => {
   const [loginModalShow, setLoginModalShow] = useState(false);
-  const [signupModalShow, setSignupModalShow] = useState(false);
 
   return (
     <Navbar bg="dark" variant="dark">
@@ -67,19 +65,12 @@ const MyNavbar = () => {
             >
               Log in
             </Button>
-            <Button
-              variant="light"
-              onClick={() => setSignupModalShow(true)}
-            >
-              Sign up
-            </Button>
+            <Link href="/registration">
+              <Button variant="light">Sign up</Button>
+            </Link>
             <LoginModal
               show={loginModalShow}
               onHide={() => setLoginModalShow(false)}
-            />
-            <SignupModal
-              show={signupModalShow}
-              onHide={() => setSignupModalShow(false)}
             />
           </>
         )}
