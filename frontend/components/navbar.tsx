@@ -20,7 +20,7 @@ const MyNavbar = () => {
   const [loginModalShow, setLoginModalShow] = useState(false);
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg" >
+    <Navbar bg="dark" variant="dark" expand="lg">
       <Container>
         <Link href="/">
           <a className="navbar-brand">Home</a>
@@ -50,7 +50,7 @@ const MyNavbar = () => {
         </Form>
 
         {logged ? (
-          <Link href="/account">
+          <Link href="/account" passHref>
             <Button variant="outline-light">
               <FontAwesomeIcon icon={faUser} className="me-2"></FontAwesomeIcon>
               <span>Username</span>
@@ -65,7 +65,7 @@ const MyNavbar = () => {
             >
               Log in
             </Button>
-            <Link href="/registration">
+            <Link href="/registration" passHref>
               <Button variant="light">Sign up</Button>
             </Link>
             <LoginModal

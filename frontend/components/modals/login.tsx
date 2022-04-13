@@ -72,9 +72,10 @@ const LoginModal = ({ ...props }) => {
           </Row>
           <Row className="justify-content-md-center">
             <Col className="text-center">
-              <Link href="/">
+              <Link href="/" passHref>
                 <Button variant="dark" className={styles.icon_btn}>
                   <FontAwesomeIcon
+                    //@ts-ignore
                     icon={"fa-brands fa-google"}
                     className={styles.icon}
                   />
@@ -82,9 +83,10 @@ const LoginModal = ({ ...props }) => {
               </Link>
             </Col>
             <Col className="text-center">
-              <Link href="/">
+              <Link href="/" passHref>
                 <Button variant="dark" className={styles.icon_btn}>
                   <FontAwesomeIcon
+                    //@ts-ignore
                     icon={"fa-brands fa-facebook-f"}
                     className={styles.icon}
                   />
@@ -92,9 +94,10 @@ const LoginModal = ({ ...props }) => {
               </Link>
             </Col>
             <Col className="text-center">
-              <Link href="/">
+              <Link href="/" passHref>
                 <Button variant="dark" className={styles.icon_btn}>
                   <FontAwesomeIcon
+                    //@ts-ignore
                     icon={"fa-brands fa-twitter"}
                     className={styles.icon}
                   />

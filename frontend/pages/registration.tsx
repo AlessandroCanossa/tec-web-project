@@ -11,10 +11,10 @@ const Registration: NextPage = () => {
 
   const validateEmail = (e: FocusEvent<HTMLInputElement>) => {
     const regex =
-      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+      /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
     const value = e.target.value;
 
-    if (!value || regex.test(value) === false) {
+    if (!value || !regex.test(value)) {
       setEmailError("error");
     }
   };
