@@ -8,15 +8,55 @@ import styles from "../components/modals/login.module.css";
 
 const Registration: NextPage = () => {
   const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPswError, setConfirmPswError] = useState("");
+
+  const [password, setPassword] = useState("");
 
   const validateEmail = (e: FocusEvent<HTMLInputElement>) => {
     const regex =
       /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
-    const value = e.target.value;
+    const target = e.target;
+    const value = target.value;
 
     if (!value || !regex.test(value)) {
-      setEmailError("error");
+      target.classList.add(`${styles.error}`);
+      setEmailError("Insert a valid email!");
+    } else {
+      target.classList.remove(`${styles.error}`);
+      setEmailError("");
     }
+  };
+
+  const handleChangePassword = (e: FocusEvent<HTMLInputElement>) => {
+    const target = e.target;
+    const regex =
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[!@#$%^&(){}[\]:;<>,.?\/~_+\-=|\\]).{8,32}$/i;
+    const value = target.value;
+    setPassword(value);
+
+    if (!value || !regex.test(value)) {
+      target.classList.add(`${styles.error}`);
+      setPasswordError(
+        "Error: Password must contain at least one number, one uppercase or lowercase letter, one special character, and at least 8 and no more than 32."
+      );
+      return;
+    }
+    target.classList.remove(`${styles.error}`);
+    setPasswordError("");
+  };
+
+  const handleChangeConfirmPsw = (e: FocusEvent<HTMLInputElement>) => {
+    const target = e.target;
+    const value = target.value;
+
+    if (value !== password) {
+      target.classList.add(`${styles.error}`);
+      setConfirmPswError("Error: Passwords must match");
+      return;
+    }
+    target.classList.remove(`${styles.error}`);
+    setConfirmPswError("");
   };
 
   return (
@@ -59,7 +99,7 @@ const Registration: NextPage = () => {
                 required
                 onBlur={validateEmail}
               />
-              <Form.Text>{emailError}</Form.Text>
+              <Form.Text className={styles.error}>{emailError}</Form.Text>
             </FloatingLabel>
             <FloatingLabel
               label="Password"
@@ -71,7 +111,10 @@ const Registration: NextPage = () => {
                 placeholder="Password"
                 className={`validate ${styles.form}`}
                 required
+                onChange={handleChangePassword}
+                title="Must contain at least one number, one uppercase or lowercase letter, one special character, and at least 8 and no more than 32."
               />
+              <Form.Text className={styles.error}>{passwordError}</Form.Text>
             </FloatingLabel>
             <FloatingLabel
               label="Confirm password"
@@ -83,7 +126,9 @@ const Registration: NextPage = () => {
                 placeholder="Confirm password"
                 className={`validate ${styles.form}`}
                 required
+                onChange={handleChangeConfirmPsw}
               />
+              <Form.Text className={styles.error}>{confirmPswError}</Form.Text>
             </FloatingLabel>
             <Form.Group
               className="mb-3 text-center"
@@ -93,7 +138,6 @@ const Registration: NextPage = () => {
                 type="submit"
                 variant="dark"
                 className="btn-block mt-3"
-                // onClick={props.onHide}
               >
                 Create account
               </Button>

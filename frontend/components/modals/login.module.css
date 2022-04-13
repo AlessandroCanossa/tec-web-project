@@ -22,3 +22,7 @@
   height: 3rem;
   width: 3rem;
 }
+
+.error {
+  color: red;
+}
