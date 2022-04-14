@@ -1,6 +1,10 @@
 import Head from "next/head";
 import { NextPage } from "next/types";
-import { Button, Container, FloatingLabel, Form, Row } from "react-bootstrap";
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import FloatingLabel from "react-bootstrap/FloatingLabel";
+import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
 import { FocusEvent, useState } from "react";
 
 import Layout from "../components/layout";
@@ -20,10 +24,10 @@ const Registration: NextPage = () => {
     const value = target.value;
 
     if (!value || !regex.test(value)) {
-      target.classList.add(`${styles.error}`);
+      e.target.classList.add("is-invalid");
       setEmailError("Insert a valid email!");
     } else {
-      target.classList.remove(`${styles.error}`);
+      target.classList.remove("is-invalid");
       setEmailError("");
     }
   };
@@ -36,13 +40,13 @@ const Registration: NextPage = () => {
     setPassword(value);
 
     if (!value || !regex.test(value)) {
-      target.classList.add(`${styles.error}`);
+      target.classList.add("is-invalid");
       setPasswordError(
         "Error: Password must contain at least one number, one uppercase or lowercase letter, one special character, and at least 8 and no more than 32."
       );
       return;
     }
-    target.classList.remove(`${styles.error}`);
+    target.classList.remove("is-invalid");
     setPasswordError("");
   };
 
@@ -51,11 +55,11 @@ const Registration: NextPage = () => {
     const value = target.value;
 
     if (value !== password) {
-      target.classList.add(`${styles.error}`);
+      target.classList.add("is-invalid");
       setConfirmPswError("Error: Passwords must match");
       return;
     }
-    target.classList.remove(`${styles.error}`);
+    target.classList.remove("is-invalid");
     setConfirmPswError("");
   };
 
@@ -99,7 +103,9 @@ const Registration: NextPage = () => {
                 required
                 onBlur={validateEmail}
               />
-              <Form.Text className={styles.error}>{emailError}</Form.Text>
+              <Form.Control.Feedback tooltip type="invalid">
+                {emailError}
+              </Form.Control.Feedback>
             </FloatingLabel>
             <FloatingLabel
               label="Password"
@@ -114,7 +120,9 @@ const Registration: NextPage = () => {
                 onChange={handleChangePassword}
                 title="Must contain at least one number, one uppercase or lowercase letter, one special character, and at least 8 and no more than 32."
               />
-              <Form.Text className={styles.error}>{passwordError}</Form.Text>
+              <Form.Control.Feedback tooltip type="invalid">
+                {passwordError}
+              </Form.Control.Feedback>
             </FloatingLabel>
             <FloatingLabel
               label="Confirm password"
@@ -128,17 +136,15 @@ const Registration: NextPage = () => {
                 required
                 onChange={handleChangeConfirmPsw}
               />
-              <Form.Text className={styles.error}>{confirmPswError}</Form.Text>
+              <Form.Control.Feedback tooltip type="invalid">
+                {confirmPswError}
+              </Form.Control.Feedback>
             </FloatingLabel>
             <Form.Group
               className="mb-3 text-center"
               controlId="formLoginButton"
             >
-              <Button
-                type="submit"
-                variant="dark"
-                className="btn-block mt-3"
-              >
+              <Button type="submit" variant="dark" className="btn-block mt-3">
                 Create account
               </Button>
             </Form.Group>
