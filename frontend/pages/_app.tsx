@@ -14,11 +14,6 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title></title>
       </Head>
-      <Script
-        src="https://kit.fontawesome.com/a39413488b.js"
-        crossOrigin="anonymous"
-        strategy={"lazyOnload"}
-      />
       <Component {...pageProps} />
     </>
   );

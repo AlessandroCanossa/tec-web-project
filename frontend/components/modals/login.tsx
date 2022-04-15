@@ -1,14 +1,20 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Link from "next/link";
 import {
-  Button,
-  Container,
-  FloatingLabel,
-  Form,
-  Modal,
-  Row,
-  Col,
-} from "react-bootstrap";
+  faFacebookF,
+  faTwitter,
+  faGoogle,
+} from "@fortawesome/free-brands-svg-icons";
+
+import Link from "next/link";
+
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import FloatingLabel from "react-bootstrap/FloatingLabel";
+import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Modal from "react-bootstrap/Modal";
+
 import styles from "./login.module.css";
 
 const LoginModal = ({ ...props }) => {
@@ -74,33 +80,21 @@ const LoginModal = ({ ...props }) => {
             <Col className="text-center">
               <Link href="/" passHref>
                 <Button variant="dark" className={styles.icon_btn}>
-                  <FontAwesomeIcon
-                    //@ts-ignore
-                    icon={"fa-brands fa-google"}
-                    className={styles.icon}
-                  />
+                  <FontAwesomeIcon icon={faGoogle} className={styles.icon} />
                 </Button>
               </Link>
             </Col>
             <Col className="text-center">
               <Link href="/" passHref>
                 <Button variant="dark" className={styles.icon_btn}>
-                  <FontAwesomeIcon
-                    //@ts-ignore
-                    icon={"fa-brands fa-facebook-f"}
-                    className={styles.icon}
-                  />
+                  <FontAwesomeIcon icon={faFacebookF} className={styles.icon} />
                 </Button>
               </Link>
             </Col>
             <Col className="text-center">
               <Link href="/" passHref>
                 <Button variant="dark" className={styles.icon_btn}>
-                  <FontAwesomeIcon
-                    //@ts-ignore
-                    icon={"fa-brands fa-twitter"}
-                    className={styles.icon}
-                  />
+                  <FontAwesomeIcon icon={faTwitter} className={styles.icon} />
                 </Button>
               </Link>
             </Col>

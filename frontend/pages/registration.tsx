@@ -1,11 +1,22 @@
 import Head from "next/head";
+import Link from "next/link";
 import { NextPage } from "next/types";
+
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+
 import { FocusEvent, useState } from "react";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faFacebookF,
+  faTwitter,
+  faGoogle,
+} from "@fortawesome/free-brands-svg-icons";
 
 import Layout from "../components/layout";
 import styles from "../components/modals/login.module.css";
@@ -78,8 +89,8 @@ const Registration: NextPage = () => {
         <Row className="items-center mb-4">
           <h2 className="font-header">Create account</h2>
         </Row>
-        <Row>
-          <Form action="/" noValidate>
+        <Row className="mb-4">
+          <Form action="/">
             <Form.Text className="mb-0">
               Your username must be unique and will be visible to other users.
             </Form.Text>
@@ -149,6 +160,35 @@ const Registration: NextPage = () => {
               </Button>
             </Form.Group>
           </Form>
+        </Row>
+        <hr className="" />
+        <Row className="justify-content-md-center mb-4">
+          <Col className="text-center">
+            <p>OR Log in with</p>
+          </Col>
+        </Row>
+        <Row className="justify-content-md-center mb-4">
+          <Col className="text-center">
+            <Link href="/google-signin" passHref>
+              <Button variant="dark" className={styles.icon_btn}>
+                <FontAwesomeIcon icon={faGoogle} className={styles.icon} />
+              </Button>
+            </Link>
+          </Col>
+          <Col className="text-center">
+            <Link href="/facebook-signin" passHref>
+              <Button variant="dark" className={styles.icon_btn}>
+                <FontAwesomeIcon icon={faFacebookF} className={styles.icon} />
+              </Button>
+            </Link>
+          </Col>
+          <Col className="text-center">
+            <Link href="/twitter-signin" passHref>
+              <Button variant="dark" className={styles.icon_btn}>
+                <FontAwesomeIcon icon={faTwitter} className={styles.icon} />
+              </Button>
+            </Link>
+          </Col>
         </Row>
       </Container>
     </Layout>
