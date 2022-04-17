@@ -2,13 +2,6 @@ import Head from "next/head";
 import Link from "next/link";
 import { NextPage } from "next/types";
 
-import Button from "react-bootstrap/Button";
-import Container from "react-bootstrap/Container";
-import FloatingLabel from "react-bootstrap/FloatingLabel";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-
 import { FocusEvent, useState } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -19,7 +12,7 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 
 import Layout from "../components/layout";
-import styles from "../components/modals/login.module.css";
+import styles from "../components/registration.module.css";
 
 const Registration: NextPage = () => {
   const [emailError, setEmailError] = useState("");
@@ -82,115 +75,47 @@ const Registration: NextPage = () => {
         {/* <link rel="icon" href="/favicon.ico" /> */}
       </Head>
 
-      <Container
-        className="narrow mb-4 mt-5 p-3"
-        style={{ backgroundColor: "white" }}
-      >
-        <Row className="items-center mb-4">
+      <div className="container flex flex-wrap mt-5 mx-auto p-5 bg-white ">
+        <div className=" w-full items-center mb-4">
           <h2 className="font-header">Create account</h2>
-        </Row>
-        <Row className="mb-4">
-          <Form action="/">
-            <Form.Text className="mb-0">
+        </div>
+        <div className=" w-full mb-4">
+          <form action="/">
+            <span className="mb-0">
               Your username must be unique and will be visible to other users.
-            </Form.Text>
-            <FloatingLabel
-              label="Username"
-              className="mb-3"
-              controlId="formUsername"
-            >
-              <Form.Control
-                type="text"
-                placeholder="Username"
-                className={`validate ${styles.form} md-input`}
-                required
-              />
-            </FloatingLabel>
-            <FloatingLabel label="Email" className="mb-3" controlId="formEmail">
-              <Form.Control
-                type="email"
-                placeholder="Email"
-                className={`validate ${styles.form}`}
-                required
-                onBlur={validateEmail}
-              />
-              <Form.Control.Feedback tooltip type="invalid">
-                {emailError}
-              </Form.Control.Feedback>
-            </FloatingLabel>
-            <FloatingLabel
-              label="Password"
-              className="mb-3"
-              controlId="formPassword"
-            >
-              <Form.Control
-                type="password"
-                placeholder="Password"
-                className={`validate ${styles.form}`}
-                required
-                onChange={handleChangePassword}
-                title="Must contain at least one number, one uppercase or lowercase letter, one special character, and at least 8 and no more than 32."
-              />
-              <Form.Control.Feedback tooltip type="invalid">
-                {passwordError}
-              </Form.Control.Feedback>
-            </FloatingLabel>
-            <FloatingLabel
-              label="Confirm password"
-              className="mb-3"
-              controlId="formConfirmPassword"
-            >
-              <Form.Control
-                type="password"
-                placeholder="Confirm password"
-                className={`validate ${styles.form}`}
-                required
-                onChange={handleChangeConfirmPsw}
-              />
-              <Form.Control.Feedback tooltip type="invalid">
-                {confirmPswError}
-              </Form.Control.Feedback>
-            </FloatingLabel>
-            <Form.Group
-              className="mb-3 text-center"
-              controlId="formLoginButton"
-            >
-              <Button type="submit" variant="dark" className="btn-block mt-3">
-                Create account
-              </Button>
-            </Form.Group>
-          </Form>
-        </Row>
+            </span>
+          </form>
+        </div>
         <hr className="" />
-        <Row className="justify-content-md-center mb-4">
-          <Col className="text-center">
+        <div className=" w-full justify-content-md-center mb-4">
+          <div className=" text-center">
             <p>OR Log in with</p>
-          </Col>
-        </Row>
-        <Row className="justify-content-md-center mb-4">
-          <Col className="text-center">
+          </div>
+        </div>
+        <div className=" flex flex-wrap mb-4 w-full">
+          <div className="w-full md:w-1/3 md:text-right text-center">
             <Link href="/google-signin" passHref>
-              <Button variant="dark" className={styles.icon_btn}>
+              <button className={styles.icon_btn}>
                 <FontAwesomeIcon icon={faGoogle} className={styles.icon} />
-              </Button>
+              </button>
             </Link>
-          </Col>
-          <Col className="text-center">
+          </div>
+          <div className="w-full md:w-1/3 text-center">
             <Link href="/facebook-signin" passHref>
-              <Button variant="dark" className={styles.icon_btn}>
+              <button className={styles.icon_btn}>
                 <FontAwesomeIcon icon={faFacebookF} className={styles.icon} />
-              </Button>
+              </button>
             </Link>
-          </Col>
-          <Col className="text-center">
+          </div>
+          <div className="w-full md:w-1/3 md:text-left text-center">
             <Link href="/twitter-signin" passHref>
-              <Button variant="dark" className={styles.icon_btn}>
+              <button className={styles.icon_btn}>
                 <FontAwesomeIcon icon={faTwitter} className={styles.icon} />
-              </Button>
+              </button>
             </Link>
-          </Col>
-        </Row>
-      </Container>
+          </div>
+        </div>
+      </div>
     </Layout>
   );
 };

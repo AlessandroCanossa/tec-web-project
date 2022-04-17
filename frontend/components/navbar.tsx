@@ -73,7 +73,7 @@ const MyNavbar = () => {
                         Log in
                       </button>
                     </Link>
-                    <Link href={"/"} passHref>
+                    <Link href={"/registration"} passHref>
                       <button className={`${styles.btn} ${styles.btn_dark}`}>
                         Sign up
                       </button>
