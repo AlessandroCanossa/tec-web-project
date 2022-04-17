@@ -1,82 +1,96 @@
 import Link from "next/link";
-import Nav from "react-bootstrap/Nav";
-import Container from "react-bootstrap/Container";
-import Navbar from "react-bootstrap/Navbar";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import FormControl from "react-bootstrap/FormControl";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
-
-import LoginModal from "./modals/login";
+import { Disclosure } from "@headlessui/react";
+import { MenuIcon, XIcon } from "@heroicons/react/outline";
+import UserMenu from "./userMenu";
+// import LoginModal from "./modals/login";
 
 import styles from "./navbar.module.css";
 
-let logged = false;
+const navigation = [
+  { name: "Home", href: "/" },
+  { name: "Genres", href: "#genre" },
+  { name: "Popular", href: "#popular" },
+];
 
 const MyNavbar = () => {
-  const [loginModalShow, setLoginModalShow] = useState(false);
+  const [logged, setLoggedState] = useState(true);
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg">
-      <Container>
-        <Link href="/">
-          <a className="navbar-brand">Home</a>
-        </Link>
-        <Nav className="me-auto">
-          <Link href="#genre">
-            <a className="nav-link">Genres</a>
-          </Link>
-          <Link href="#popular">
-            <a className="nav-link">Popular</a>
-          </Link>
-        </Nav>
-        <Form className="d-flex me-5" method="get" action="">
-          {/* TODO: set action to get the search */}
-          <FormControl
-            type="search"
-            placeholder="Search"
-            className={`me-2 bg-dark text-white ${styles.search_bar}`}
-          />
-          <Button
-            type="submit"
-            variant="outline-light"
-            className={`me-2 ${styles.search_btn}`}
-          >
-            <FontAwesomeIcon icon={faSearch} />
-          </Button>
-        </Form>
+    <Disclosure as="nav" className="bg-gray-900">
+      {({ open }) => (
+        <>
+          <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+            <div className="relative flex items-center justify-between h-16">
+              <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
+                {/* Mobile menu button*/}
+                <Disclosure.Button className={styles.menu_btn}>
+                  <span className="sr-only">Open main menu</span>
+                  {open ? (
+                    <XIcon className="block h-6 w-6" aria-hidden="true" />
+                  ) : (
+                    <MenuIcon className="block h-6 w-6" aria-hidden="true" />
+                  )}
+                </Disclosure.Button>
+              </div>
 
-        {logged ? (
-          <Link href="/account" passHref>
-            <Button variant="outline-light">
-              <FontAwesomeIcon icon={faUser} className="me-2"></FontAwesomeIcon>
-              <span>Username</span>
-            </Button>
-          </Link>
-        ) : (
-          <>
-            <Button
-              variant="outline-light"
-              className="me-2"
-              onClick={() => setLoginModalShow(true)}
-            >
-              Log in
-            </Button>
-            <Link href="/registration" passHref>
-              <Button variant="light">Sign up</Button>
-            </Link>
-            <LoginModal
-              show={loginModalShow}
-              onHide={() => setLoginModalShow(false)}
-            />
-          </>
-        )}
-      </Container>
-    </Navbar>
+              {/* Navigation */}
+              <div className={styles.nav_items}>
+                <div className="hidden sm:block sm:ml-6">
+                  <div className="flex space-x-4">
+                    {navigation.map((item) => (
+                      <Link href={item.href} passHref key={item.name}>
+                        <a
+                          className={
+                            item.name === "Home"
+                              ? styles.nav_home
+                              : styles.nav_item
+                          }
+                        >
+                          {item.name}
+                        </a>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className={styles.account_zone}>
+                {/* Profile dropdown */}
+                {logged ? (
+                  <UserMenu setLoggedState={setLoggedState} />
+                ) : (
+                  <>
+                    <Link href={"/login"} passHref>
+                      <button className={`${styles.btn} ${styles.btn_light}`}>
+                        Log in
+                      </button>
+                    </Link>
+                    <Link href={"/"} passHref>
+                      <button className={`${styles.btn} ${styles.btn_dark}`}>
+                        Sign up
+                      </button>
+                    </Link>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <Disclosure.Panel className="sm:hidden">
+            <div className={styles.menu}>
+              {navigation.map((item) => (
+                <Link href={item.href} passHref key={item.name}>
+                  <Disclosure.Button as="a" className={styles.menu_item}>
+                    {item.name}
+                  </Disclosure.Button>
+                </Link>
+              ))}
+            </div>
+          </Disclosure.Panel>
+        </>
+      )}
+    </Disclosure>
   );
 };
-
 export default MyNavbar;

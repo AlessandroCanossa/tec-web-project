@@ -1,9 +1,67 @@
-.search_bar {
-  border: 0;
-  border-bottom: 1px solid;
-  border-radius: 0;
+.btn {
+  @apply font-medium py-2 px-4 rounded mx-2
 }
 
-.search_btn {
-  border: 0
+.btn_light {
+  @apply bg-white
+}
+
+.btn_light:hover {
+  @apply bg-gray-800 text-white
+}
+
+.btn_dark {
+  @apply bg-gray-800 text-white;
+}
+
+.btn_dark:hover {
+  @apply bg-white text-black
+}
+
+.menu_btn {
+  @apply inline-flex items-center justify-center p-2 rounded-md text-gray-400
+}
+
+.menu_btn:hover {
+  @apply text-white bg-gray-700
+}
+
+.menu_btn:focus {
+  @apply outline-none ring-2 ring-inset ring-white
+}
+
+.account_zone {
+  @apply absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0
+}
+
+.nav_items {
+  @apply flex-1 flex items-center justify-center sm:items-stretch sm:justify-start
+}
+
+.nav_item {
+  @apply text-gray-300 px-3 py-4 rounded-md text-sm font-medium
+}
+
+.nav_item:hover {
+  @apply text-white
+}
+
+.nav_home {
+  @apply text-gray-300 px-3 py-2 text-2xl
+}
+
+.nav_home:hover {
+  @apply text-white
+}
+
+.menu_item {
+  @apply text-gray-300 block px-3 py-2 rounded-md text-base font-medium
+}
+
+.menu_item:hover {
+  @apply bg-gray-700 text-white
+}
+
+.menu {
+  @apply px-2 pt-2 pb-3 space-y-1
 }
