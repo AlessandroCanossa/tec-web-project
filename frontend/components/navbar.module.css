@@ -65,3 +65,16 @@
 .menu {
   @apply px-2 pt-2 pb-3 space-y-1
 }
+
+.search_bar {
+  @apply relative mx-auto text-white
+}
+
+.search_bar input {
+  @apply border-gray-300 bg-gray-900 h-10 px-5 pr-16 text-sm focus:outline-none;
+  border-bottom: 1px solid;
+}
+
+.search_bar button {
+  @apply absolute right-0 top-0 mt-2 mr-3
+}

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { useState } from "react";
 import { Disclosure } from "@headlessui/react";
-import { MenuIcon, XIcon } from "@heroicons/react/outline";
+import { MenuIcon, XIcon, SearchIcon } from "@heroicons/react/outline";
 import UserMenu from "./userMenu";
 // import LoginModal from "./modals/login";
 
@@ -54,6 +54,13 @@ const MyNavbar = () => {
                     ))}
                   </div>
                 </div>
+              </div>
+              {/*search bar*/}
+              <div className={styles.search_bar}>
+                <input type="search" name="search" placeholder="Search" />
+                <button type="submit">
+                  <SearchIcon className={"block h-6 w-6"} />
+                </button>
               </div>
               <div className={styles.account_zone}>
                 {/* Profile dropdown */}
