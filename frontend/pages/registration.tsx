@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Link from "next/link";
 import { NextPage } from "next/types";
 
 import { FocusEvent, useState } from "react";
@@ -13,20 +12,17 @@ const Registration: NextPage = () => {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPswError, setConfirmPswError] = useState("");
-
   const [password, setPassword] = useState("");
 
-  const validateEmail = (e: FocusEvent<HTMLInputElement>) => {
+  const handleChangeEmail = (e: FocusEvent<HTMLInputElement>) => {
     const regex =
       /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
     const target = e.target;
     const value = target.value;
 
     if (!value || !regex.test(value)) {
-      e.target.classList.add("is-invalid");
       setEmailError("Insert a valid email!");
     } else {
-      target.classList.remove("is-invalid");
       setEmailError("");
     }
   };
@@ -39,13 +35,11 @@ const Registration: NextPage = () => {
     setPassword(value);
 
     if (!value || !regex.test(value)) {
-      target.classList.add("is-invalid");
       setPasswordError(
         "Error: Password must contain at least one number, one uppercase or lowercase letter, one special character, and at least 8 and no more than 32."
       );
       return;
     }
-    target.classList.remove("is-invalid");
     setPasswordError("");
   };
 
@@ -54,11 +48,9 @@ const Registration: NextPage = () => {
     const value = target.value;
 
     if (value !== password) {
-      target.classList.add("is-invalid");
       setConfirmPswError("Error: Passwords must match");
       return;
     }
-    target.classList.remove("is-invalid");
     setConfirmPswError("");
   };
 
@@ -84,21 +76,28 @@ const Registration: NextPage = () => {
                 inputType={"text"}
                 inputName={"username"}
                 inputLabel={"Username"}
+                errorMsg={""}
               />
               <FormInput
                 inputType={"email"}
                 inputName={"email"}
                 inputLabel={"Email"}
+                errorMsg={emailError}
+                changeHandler={handleChangeEmail}
               />
               <FormInput
                 inputType={"password"}
                 inputName={"password"}
                 inputLabel={"Password"}
+                errorMsg={passwordError}
+                changeHandler={handleChangePassword}
               />
               <FormInput
                 inputType={"password"}
                 inputName={"confirmPassword"}
                 inputLabel={"Confirm Password"}
+                errorMsg={confirmPswError}
+                changeHandler={handleChangeConfirmPsw}
               />
             </div>
             <div className="text-center">
