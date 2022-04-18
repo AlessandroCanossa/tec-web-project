@@ -72,37 +72,42 @@ const Registration: NextPage = () => {
 
       <div className="container flex flex-wrap mt-5 mx-auto p-5 bg-white max-w-xl ">
         <div className=" w-full items-center mb-4">
-          <h2 className="font-header">Create account</h2>
+          <h2 className="text-2xl">Create account</h2>
         </div>
         <div className=" w-full mb-4 ">
           <form action="/" method="POST">
             <span className="text-sm text-gray-500">
               Your username must be unique and will be visible to other users.
             </span>
-            <FormInput
-              inputType={"text"}
-              inputName={"username"}
-              inputLabel={"Username"}
-            />
-            <FormInput
-              inputType={"email"}
-              inputName={"email"}
-              inputLabel={"Email"}
-            />
-            <FormInput
-              inputType={"password"}
-              inputName={"password"}
-              inputLabel={"Password"}
-            />
-            <FormInput
-              inputType={"password"}
-              inputName={"confirmPassword"}
-              inputLabel={"Confirm Password"}
-            />
-            <button type={"submit"}>Sign up</button>
+            <div>
+              <FormInput
+                inputType={"text"}
+                inputName={"username"}
+                inputLabel={"Username"}
+              />
+              <FormInput
+                inputType={"email"}
+                inputName={"email"}
+                inputLabel={"Email"}
+              />
+              <FormInput
+                inputType={"password"}
+                inputName={"password"}
+                inputLabel={"Password"}
+              />
+              <FormInput
+                inputType={"password"}
+                inputName={"confirmPassword"}
+                inputLabel={"Confirm Password"}
+              />
+            </div>
+            <div className="text-center">
+              <button type={"submit"} className="btn btn_dark">
+                Sign up
+              </button>
+            </div>
           </form>
         </div>
-        <hr className="" />
         <LoginSocial />
       </div>
     </Layout>

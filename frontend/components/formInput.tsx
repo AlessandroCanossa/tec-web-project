@@ -1,7 +1,8 @@
 import styles from "./formInput.module.css";
+import { HTMLInputTypeAttribute } from "react";
 
 const FormInput = (props: {
-  inputType: string;
+  inputType: HTMLInputTypeAttribute;
   inputName: string;
   inputLabel: string;
 }) => {

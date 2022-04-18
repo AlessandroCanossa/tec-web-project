@@ -10,6 +10,7 @@ import {
 const LoginSocial = () => {
   return (
     <>
+      <hr className="relative my-4 w-full" />
       <div className=" w-full justify-content-md-center mb-4">
         <div className=" text-center">
           <p>OR Log in with</p>
