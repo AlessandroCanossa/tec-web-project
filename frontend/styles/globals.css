@@ -39,3 +39,13 @@ a {
 .btn_dark:hover {
   @apply bg-white text-black
 }
+
+input:focus ~ label,
+input:not(:placeholder-shown) ~ label {
+  @apply transform scale-75 -translate-y-6;
+}
+
+input:focus ~ label,
+select:focus ~ label {
+  @apply text-black left-0
+}
