@@ -1,0 +1,14 @@
+.status_dot {
+  height: 10px;
+  width: 10px;
+  border-radius: 100%;
+  display: inline-block;
+  position: relative;
+}
+.status_dot.completed {
+  background: purple;
+}
+
+.card {
+  @apply max-w-xs w-full grid gap-2 bg-white shadow-sm rounded-md m-5
+}
