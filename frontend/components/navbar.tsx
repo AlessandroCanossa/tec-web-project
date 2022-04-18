@@ -69,14 +69,10 @@ const MyNavbar = () => {
                 ) : (
                   <>
                     <Link href={"/login"} passHref>
-                      <button className={`${styles.btn} ${styles.btn_light}`}>
-                        Log in
-                      </button>
+                      <button className={"btn btn_dark"}>Log in</button>
                     </Link>
                     <Link href={"/registration"} passHref>
-                      <button className={`${styles.btn} ${styles.btn_dark}`}>
-                        Sign up
-                      </button>
+                      <button className={"btn btn_light"}>Sign up</button>
                     </Link>
                   </>
                 )}
