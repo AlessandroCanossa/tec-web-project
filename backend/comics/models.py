@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import models as auth_models
+from dynamic_image.fields import DynamicImageField
 
 from . import managers
 
@@ -46,8 +47,13 @@ class Comic(models.Model):
     rating = models.FloatField(default=0)
     status = models.CharField(choices=STATUS, default=ONGOING, max_length=1)
     summary = models.TextField()
-    thumbnail = models.ImageField(upload_to=f'static')
-    cover = models.ImageField(upload_to='static')
+    thumbnail = DynamicImageField()
+    cover = DynamicImageField()
 
     def __str__(self):
         return self.title
+
+    def get_upload_to(self, field_name):
+        class_name = self.__class__.__name__.lower()
+        instance_name = self.title.lower().replace(' ', '-')
+        return f'{class_name}/{instance_name}'
