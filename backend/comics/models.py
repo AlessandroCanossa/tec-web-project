@@ -1,3 +1,5 @@
+import time
+
 from django.db import models
 from django.contrib.auth import models as auth_models
 from dynamic_image.fields import DynamicImageField
@@ -57,3 +59,26 @@ class Comic(models.Model):
         class_name = self.__class__.__name__.lower()
         instance_name = self.title.lower().replace(' ', '-')
         return f'{class_name}/{instance_name}'
+
+
+class Chapter(models.Model):
+    title = models.CharField(unique=True, max_length=255)
+    comic_id = models.ForeignKey(to=Comic, on_delete=models.CASCADE)
+    pub_date = models.DateTimeField(auto_now_add=True)
+    likes = models.PositiveBigIntegerField(default=0)
+
+    def __str__(self):
+        return self.title
+
+
+class ChapterImage(models.Model):
+    image = DynamicImageField(unique=True)
+    chapter_id = models.ForeignKey(to=Chapter, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.image.name
+
+    def get_upload_to(self, field_name):
+        chapter_name = self.chapter_id.title.lower().replace(' ', '-')
+        comic_name = self.chapter_id.comic_id.title.lower().replace(' ', '-')
+        return f'chapter/{comic_name}/{chapter_name}'
