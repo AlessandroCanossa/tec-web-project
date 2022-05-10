@@ -66,6 +66,7 @@ class Chapter(models.Model):
     comic = models.ForeignKey(to=Comic, on_delete=models.CASCADE)
     pub_date = models.DateTimeField(auto_now_add=True)
     likes = models.PositiveBigIntegerField(default=0)
+    cost = models.PositiveIntegerField(default=50)
 
     models.UniqueConstraint(fields=['title', 'comic'], name='comic_chapter')
 
