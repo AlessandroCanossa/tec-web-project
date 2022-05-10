@@ -42,7 +42,7 @@ class Comic(models.Model):
     ]
 
     title = models.CharField(unique=True, max_length=255)
-    creator_id = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    creator = models.ForeignKey(to=User, on_delete=models.CASCADE)
     genres = models.ManyToManyField(to=Genre)
     watches = models.PositiveBigIntegerField(default=0)
     follows = models.PositiveBigIntegerField(default=0)
@@ -63,46 +63,46 @@ class Comic(models.Model):
 
 class Chapter(models.Model):
     title = models.CharField(max_length=255)
-    comic_id = models.ForeignKey(to=Comic, on_delete=models.CASCADE)
+    comic = models.ForeignKey(to=Comic, on_delete=models.CASCADE)
     pub_date = models.DateTimeField(auto_now_add=True)
     likes = models.PositiveBigIntegerField(default=0)
 
-    models.UniqueConstraint(fields=['title', 'comic_id'], name='comic_chapter')
+    models.UniqueConstraint(fields=['title', 'comic'], name='comic_chapter')
 
     def __str__(self):
-        return f'{self.comic_id.title} - {self.title}'
+        return f'{self.comic.title} - {self.title}'
 
 
 class ChapterImage(models.Model):
     image = DynamicImageField()
-    chapter_id = models.ForeignKey(to=Chapter, on_delete=models.CASCADE)
+    chapter = models.ForeignKey(to=Chapter, on_delete=models.CASCADE)
 
-    models.UniqueConstraint(fields=['image', 'chapter_id'], name='chapter_image')
+    models.UniqueConstraint(fields=['image', 'chapter'], name='chapter_image')
 
     def __str__(self):
         return self.image.name
 
     def get_upload_to(self, field_name):
-        chapter_name = self.chapter_id.title.lower().replace(' ', '-')
-        comic_name = self.chapter_id.comic_id.title.lower().replace(' ', '-')
+        chapter_name = self.chapter.title.lower().replace(' ', '-')
+        comic_name = self.chapter.comic.title.lower().replace(' ', '-')
         return f'chapter/{comic_name}/{chapter_name}'
 
 
 class ReadHistory(models.Model):
-    chapter_id = models.ForeignKey(to=Chapter, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    chapter = models.ForeignKey(to=Chapter, on_delete=models.CASCADE)
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.user_id} - {self.chapter_id} - {self.date}'
+        return f'{self.user} - {self.chapter} - {self.date}'
 
 
 class BuyList(models.Model):
-    chapter_id = models.ForeignKey(to=Chapter, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    chapter = models.ForeignKey(to=Chapter, on_delete=models.CASCADE)
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True)
 
-    models.UniqueConstraint(fields=['user_id', 'chapter_id'], name='bought_chapter')
+    models.UniqueConstraint(fields=['user', 'chapter'], name='bought_chapter')
 
     def __str__(self):
-        return f'{self.user_id} - {self.chapter_id} - {self.date}'
+        return f'{self.user} - {self.chapter} - {self.date}'
