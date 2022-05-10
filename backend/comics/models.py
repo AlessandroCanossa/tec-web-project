@@ -95,3 +95,14 @@ class ReadHistory(models.Model):
 
     def __str__(self):
         return f'{self.user_id} - {self.chapter_id} - {self.date}'
+
+
+class BuyList(models.Model):
+    chapter_id = models.ForeignKey(to=Chapter, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    date = models.DateField(auto_now_add=True)
+
+    models.UniqueConstraint(fields=['user_id', 'chapter_id'], name='bought_chapter')
+
+    def __str__(self):
+        return f'{self.user_id} - {self.chapter_id} - {self.date}'
