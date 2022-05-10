@@ -1,25 +1,5 @@
-import time
-
 from django.db import models
-from django.contrib.auth import models as auth_models
 from dynamic_image.fields import DynamicImageField
-
-from . import managers
-
-
-# Create your models here.
-
-
-class User(auth_models.AbstractUser):
-    coins = models.IntegerField(default=0)
-    is_creator = models.BooleanField(default=False)
-
-    email = models.EmailField(max_length=255, unique=True)
-
-    objects = managers.UserManager()
-
-    def __str__(self):
-        return self.username
 
 
 class Genre(models.Model):
@@ -42,7 +22,7 @@ class Comic(models.Model):
     ]
 
     title = models.CharField(unique=True, max_length=255)
-    creator = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    creator = models.ForeignKey(to='User', on_delete=models.CASCADE)
     genres = models.ManyToManyField(to=Genre)
     watches = models.PositiveBigIntegerField(default=0)
     follows = models.PositiveBigIntegerField(default=0)
@@ -87,23 +67,3 @@ class ChapterImage(models.Model):
         chapter_name = self.chapter.title.lower().replace(' ', '-')
         comic_name = self.chapter.comic.title.lower().replace(' ', '-')
         return f'chapter/{comic_name}/{chapter_name}'
-
-
-class ReadHistory(models.Model):
-    chapter = models.ForeignKey(to=Chapter, on_delete=models.CASCADE)
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    date = models.DateField(auto_now_add=True)
-
-    def __str__(self):
-        return f'{self.user} - {self.chapter} - {self.date}'
-
-
-class BuyList(models.Model):
-    chapter = models.ForeignKey(to=Chapter, on_delete=models.CASCADE)
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    date = models.DateField(auto_now_add=True)
-
-    models.UniqueConstraint(fields=['user', 'chapter'], name='bought_chapter')
-
-    def __str__(self):
-        return f'{self.user} - {self.chapter} - {self.date}'
