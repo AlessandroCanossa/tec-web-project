@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Comic, Genre, Chapter, ChapterImage
+from .models import User, Comic, Genre, Chapter, ChapterImage, ReadHistory
 
 # Register your models here.
 
@@ -8,3 +8,4 @@ admin.site.register(Genre)
 admin.site.register(Comic)
 admin.site.register(Chapter)
 admin.site.register(ChapterImage)
+admin.site.register(ReadHistory)

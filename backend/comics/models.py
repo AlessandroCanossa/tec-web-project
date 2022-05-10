@@ -62,18 +62,22 @@ class Comic(models.Model):
 
 
 class Chapter(models.Model):
-    title = models.CharField(unique=True, max_length=255)
+    title = models.CharField(max_length=255)
     comic_id = models.ForeignKey(to=Comic, on_delete=models.CASCADE)
     pub_date = models.DateTimeField(auto_now_add=True)
     likes = models.PositiveBigIntegerField(default=0)
 
+    models.UniqueConstraint(fields=['title', 'comic_id'], name='comic_chapter')
+
     def __str__(self):
-        return self.title
+        return f'{self.comic_id.title} - {self.title}'
 
 
 class ChapterImage(models.Model):
-    image = DynamicImageField(unique=True)
+    image = DynamicImageField()
     chapter_id = models.ForeignKey(to=Chapter, on_delete=models.CASCADE)
+
+    models.UniqueConstraint(fields=['image', 'chapter_id'], name='chapter_image')
 
     def __str__(self):
         return self.image.name
@@ -82,3 +86,12 @@ class ChapterImage(models.Model):
         chapter_name = self.chapter_id.title.lower().replace(' ', '-')
         comic_name = self.chapter_id.comic_id.title.lower().replace(' ', '-')
         return f'chapter/{comic_name}/{chapter_name}'
+
+
+class ReadHistory(models.Model):
+    chapter_id = models.ForeignKey(to=Chapter, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user_id} - {self.chapter_id} - {self.date}'
