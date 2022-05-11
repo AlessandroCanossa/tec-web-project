@@ -46,3 +46,19 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'Comment {self.body} by {self.user.username}'
+
+
+class Library(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    comic = models.ForeignKey(to=Comic, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.user.username} - {self.comic.title}'
+
+
+class Market(models.Model):
+    cost = models.FloatField(help_text='Cost in euros')
+    coins = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f'{self.cost}€ = {self.coins} coins'
