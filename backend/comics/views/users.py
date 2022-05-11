@@ -3,13 +3,12 @@ from rest_framework import views
 from rest_framework.response import Response
 from rest_framework import authentication, permissions
 
-from .models import User
-from .serializers import UserSerializer
+from ..models import User
+from ..serializers import UserSerializer
 
 
 class UserList(views.APIView):
-
-    # permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.IsAdminUser]
 
     @staticmethod
     def get(request: HttpRequest, format=None) -> Response:
