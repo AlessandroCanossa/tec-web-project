@@ -1,3 +1,4 @@
+from django.http import Http404
 from rest_framework import views, status, authentication, permissions
 from rest_framework.response import Response
 from rest_framework.request import Request
@@ -30,22 +31,22 @@ class UserCreate(views.APIView):
 
 
 class UserDetails(views.APIView):
-    @staticmethod
-    def get(request: Request, pk: int, format=None) -> Response:
-
+    def get_object(self, pk: int) -> (User | Http404):
         try:
-            user = User.objects.get(pk=pk)
+            return User.objects.get(pk=pk)
         except User.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        else:
-            serializer = UserSerializer(user, context={'request': request})
-            return Response(serializer.data)
+            raise Http404
 
-    @staticmethod
-    def delete(request: Request, pk: int, format=None) -> Response:
-        User.objects.get(pk).delete()
+    def get(self, request: Request, pk: int, format=None) -> Response:
+        user = self.get_object(pk)
+        serializer = UserSerializer(user, context={'request': request})
+        return Response(serializer.data)
+
+    def delete(self, request: Request, pk: int, format=None) -> Response:
+        user = self.get_object(pk)
+        user.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def put(self, request: Request, pk: int, format=None) -> Response:
-        ...
+        user = self.get_object(pk)
