@@ -9,6 +9,18 @@ class ComicSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ComicListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comic
+        fields = ['id', 'title', 'thumbnail', 'rating', 'status']
+
+
+class ComicCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comic
+        fields = ['title', 'creator', 'thumbnail', 'cover', 'genre', 'summary']
+
+
 class ChapterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chapter

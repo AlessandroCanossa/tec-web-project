@@ -23,7 +23,7 @@ class Comic(models.Model):
 
     title = models.CharField(unique=True, max_length=255)
     creator = models.ForeignKey(to='User', on_delete=models.CASCADE)
-    genres = models.ManyToManyField(to=Genre)
+    genre = models.ManyToManyField(to=Genre)
     watches = models.PositiveBigIntegerField(default=0)
     follows = models.PositiveBigIntegerField(default=0)
     rating = models.FloatField(default=0)
