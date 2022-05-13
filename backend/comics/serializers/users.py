@@ -10,6 +10,12 @@ class UserSerializer(serializers.ModelSerializer):
         # fields = '__all__'
 
 
+class UserCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password', 'first_name', 'last_name']
+
+
 class MarketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Market

@@ -1,33 +1,20 @@
 from django.http import Http404
-from rest_framework import views, status, authentication, permissions
+from rest_framework import views, status, authentication, permissions, generics
 from rest_framework.response import Response
 from rest_framework.request import Request
 
 from ..models import User
-from ..serializers import UserSerializer
+from ..serializers import UserSerializer, UserCreateSerializer
 
 
-class UserList(views.APIView):
+class UserList(generics.ListAPIView):
     permission_classes = [permissions.IsAdminUser]
-
-    @staticmethod
-    def get(request: Request, format=None) -> Response:
-        queryset = User.objects.all()
-        serializer = UserSerializer(
-            queryset, many=True, context={'request': request})
-        return Response(serializer.data)
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
 
 
-class UserCreate(views.APIView):
-    @staticmethod
-    def post(request: Request, format=None) -> Response:
-        serializer = UserSerializer(data=request.data)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class UserCreate(generics.CreateAPIView):
+    serializer_class = UserCreateSerializer
 
 
 class UserDetails(views.APIView):
@@ -45,6 +32,10 @@ class UserDetails(views.APIView):
 
     def delete(self, request: Request, pk: int, format=None) -> Response:
         user = self.get_object(pk)
+
+        if user.pk != request.user.pk:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
         user.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -52,7 +43,10 @@ class UserDetails(views.APIView):
     def put(self, request: Request, pk: int, format=None) -> Response:
         user = self.get_object(pk)
 
-        serializer = UserSerializer(self=user, data=request.data)
+        if user.pk != request.user.pk:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        serializer = UserSerializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
