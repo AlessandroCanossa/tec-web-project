@@ -31,7 +31,8 @@ class UserCreate(views.APIView):
 
 
 class UserDetails(views.APIView):
-    def get_object(self, pk: int) -> (User | Http404):
+    @staticmethod
+    def get_object(pk: int) -> User:
         try:
             return User.objects.get(pk=pk)
         except User.DoesNotExist:
@@ -50,3 +51,9 @@ class UserDetails(views.APIView):
 
     def put(self, request: Request, pk: int, format=None) -> Response:
         user = self.get_object(pk)
+
+        serializer = UserSerializer(self=user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
