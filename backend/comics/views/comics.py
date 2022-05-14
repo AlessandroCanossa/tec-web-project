@@ -4,13 +4,12 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 import django_filters.rest_framework
 
-from ..models import Comic
-from ..serializers import ComicSerializer, ComicListSerializer, ComicCreateSerializer
+from ..models import Comic, Chapter, ChapterImage
+from ..serializers import *
 
 
 class ComicList(generics.ListAPIView):
     serializer_class = ComicListSerializer
-    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
     queryset = Comic.objects.all()
     filterset_fields = ['genre', 'status']
 
@@ -54,3 +53,59 @@ class ComicDetails(views.APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ChapterList(views.APIView):
+    def get(self, request: Request, comic_id: int, format=None) -> Response:
+        chapters = Chapter.objects.filter(comic_id=comic_id)
+
+        serializer = ChapterListSerializer(chapters, many=True, context={'request': request})
+
+        return Response(data=serializer.data)
+
+
+class ChapterCreate(generics.CreateAPIView):
+    serializer_class = ChapterSerializer
+
+
+class ChapterDetails(views.APIView):
+
+    @staticmethod
+    def get_object(pk: int):
+        try:
+            return Chapter.objects.get(pk=pk)
+        except Chapter.DoesNotExist:
+            raise Http404
+
+    def get(self, request: Request, pk: int, format=None) -> Response:
+        chapter = self.get_object(pk)
+
+        serializer = ChapterSerializer(chapter, context={'request': request})
+
+        return Response(data=serializer.data)
+
+    def delete(self, request: Request, pk: int, format=None) -> Response:
+        chapter = self.get_object(pk)
+
+        if chapter.comic.creator.pk != request.user.pk:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        chapter.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def put(self, request: Request, pk: int, format=None) -> Response:
+        chapter = self.get_object(pk)
+
+        if chapter.comic.creator.pk != request.user.pk:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        serializer = ChapterSerializer(chapter, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ChapterImageList(views.APIView):
+    ...

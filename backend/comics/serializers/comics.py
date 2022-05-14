@@ -21,6 +21,12 @@ class ComicCreateSerializer(serializers.ModelSerializer):
         fields = ['title', 'creator', 'thumbnail', 'cover', 'genre', 'summary']
 
 
+class ChapterListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Chapter
+        fields = ['id', 'title', 'cost', 'pub_date']
+
+
 class ChapterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chapter
