@@ -82,3 +82,19 @@ class MarketList(generics.ListAPIView):
     serializer_class = MarketSerializer
     queryset = Market.objects.all()
 
+
+class BuyListList(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request: Request, user_id: int, format=None):
+        if user_id != request.user.pk:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        buy_list = BuyList.objects.filter(user_id=user_id)
+        serializer = BuyListSerializer(buy_list, many=True, context={'request': request})
+        return Response(serializer.data)
+
+
+class BuyListAdd(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = BuyListSerializer

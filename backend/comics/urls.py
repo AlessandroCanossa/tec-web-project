@@ -12,6 +12,8 @@ urlpatterns = [
     path('library/entry/<int:pk>/delete', views.LibraryDelete.as_view(), name='library-entry-delete'),
     path('library/entry/new', views.LibraryAdd.as_view(), name='library-entry-add'),
     path('market', views.MarketList.as_view(), name='market-list'),
+    path('users/<int:user_id>/buy_list', views.BuyListList.as_view(), name='user-buy-list'),
+    path('buy-list/entry/new', views.BuyListAdd.as_view(), name='buy-list-entry-add'),
 
     # comics path
     path('comics/', views.ComicList.as_view(), name='comic-list'),
