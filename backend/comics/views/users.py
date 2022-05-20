@@ -3,8 +3,8 @@ from rest_framework import views, status, authentication, permissions, generics
 from rest_framework.response import Response
 from rest_framework.request import Request
 
-from ..models import User
-from ..serializers import UserSerializer, UserCreateSerializer
+from ..models import User, Library
+from ..serializers import *
 
 
 class UserList(generics.ListAPIView):
@@ -51,3 +51,28 @@ class UserDetails(views.APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LibraryList(views.APIView):
+    def get(self, request: Request, user_id: int, format=None) -> Response:
+        library = Library.objects.filter(user_id=user_id)
+        serializer = LibrarySerializer(library, many=True, context={'request': request})
+        return Response(serializer.data)
+
+
+class LibraryAdd(generics.CreateAPIView):
+    serializer_class = LibrarySerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class LibraryDelete(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def delete(self, request: Request, pk: int, format=None) -> Response:
+        entry = Library.objects.get(pk)
+
+        if entry.user.pk != request.user.pk:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        entry.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
