@@ -4,12 +4,16 @@ from . import views
 
 app_name = 'comics'
 urlpatterns = [
+    # users path
     path('users/', views.UserList.as_view(), name='user-list'),
     path('users/new', views.UserCreate.as_view(), name='user-create'),
     path('users/<int:pk>', views.UserDetails.as_view(), name='user-details'),
     path('users/<int:user_id>/library', views.LibraryList.as_view(), name='user-library'),
-    path('library/entry/<int:pk>/delete',  views.LibraryDelete.as_view(), name='library-entry-delete'),
-    path('library/entry/new',  views.LibraryAdd.as_view(), name='library-entry-add'),
+    path('library/entry/<int:pk>/delete', views.LibraryDelete.as_view(), name='library-entry-delete'),
+    path('library/entry/new', views.LibraryAdd.as_view(), name='library-entry-add'),
+    path('market', views.MarketList.as_view(), name='market-list'),
+
+    # comics path
     path('comics/', views.ComicList.as_view(), name='comic-list'),
     path('comics/new', views.ComicCreate.as_view(), name='comic-create'),
     path('comics/<int:pk>', views.ComicDetails.as_view(), name='comic-details'),

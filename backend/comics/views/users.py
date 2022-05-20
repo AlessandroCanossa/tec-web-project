@@ -1,9 +1,9 @@
 from django.http import Http404
-from rest_framework import views, status, authentication, permissions, generics
+from rest_framework import views, status, permissions, generics
 from rest_framework.response import Response
 from rest_framework.request import Request
 
-from ..models import User, Library
+from ..models import User, Library, Market, Comment, ReadHistory, BuyList
 from ..serializers import *
 
 
@@ -76,3 +76,9 @@ class LibraryDelete(views.APIView):
 
         entry.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class MarketList(generics.ListAPIView):
+    serializer_class = MarketSerializer
+    queryset = Market.objects.all()
+
