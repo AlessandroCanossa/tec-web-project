@@ -98,3 +98,33 @@ class BuyListList(views.APIView):
 class BuyListAdd(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = BuyListSerializer
+
+
+class HistoryList(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request: Request, user_id: int, format=None):
+        if user_id != request.user.pk:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        history = ReadHistory.objects.filter(user_id=user_id)
+        serializer = HistorySerializer(history, many=True, context={'request': request})
+        return Response(serializer.data)
+
+
+class HistoryEntryAdd(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = HistorySerializer
+
+
+class HistoryEntryDelete(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def delete(self, request: Request, pk: int, format=None) -> Response:
+        entry = ReadHistory.objects.get(pk)
+
+        if entry.user.pk != request.user.pk:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        entry.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

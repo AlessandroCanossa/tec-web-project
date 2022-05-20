@@ -6,7 +6,11 @@ from .users import (UserList,
                     LibraryDelete,
                     MarketList,
                     BuyListList,
-                    BuyListAdd)
+                    BuyListAdd,
+                    HistoryList,
+                    HistoryEntryAdd,
+                    HistoryEntryDelete
+                    )
 from .comics import (ComicList,
                      ComicCreate,
                      ComicDetails,
