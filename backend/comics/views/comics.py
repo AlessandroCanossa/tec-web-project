@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 import django_filters.rest_framework
 
-from ..models import Comic, Chapter, ChapterImage
+from ..models import Comic, Chapter, ChapterImage, Genre
 from ..serializers import *
 
 
@@ -135,3 +135,8 @@ class ChapterImageList(views.APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GenreList(generics.ListAPIView):
+    serializer_class = GenreSerializer
+    queryset = Genre.objects.all()
