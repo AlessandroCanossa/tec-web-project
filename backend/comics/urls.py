@@ -8,16 +8,24 @@ urlpatterns = [
     path('users/', views.UserList.as_view(), name='user-list'),
     path('users/new', views.UserCreate.as_view(), name='user-create'),
     path('users/<int:pk>', views.UserDetails.as_view(), name='user-details'),
+
     path('users/<int:user_id>/library', views.LibraryList.as_view(), name='user-library'),
     path('library/entry/<int:pk>/delete', views.LibraryDelete.as_view(), name='library-entry-delete'),
     path('library/entry/new', views.LibraryAdd.as_view(), name='library-entry-add'),
+
     path('market', views.MarketList.as_view(), name='market-list'),
+
     path('users/<int:user_id>/buy_list', views.BuyListList.as_view(), name='user-buy-list'),
     path('buy-list/entry/new', views.BuyListAdd.as_view(), name='buy-list-entry-add'),
+
     path('users/<int:user_id>/history', views.HistoryList.as_view(), name='user-history'),
     path('history/entry/<int:pk>/delete', views.HistoryEntryDelete.as_view(), name='history-entry-delete'),
     path('history/entry/new', views.HistoryEntryAdd.as_view(), name='history-entry-add'),
 
+    path('chapter/<int:chapter_id>/comments', views.ChapterCommentList.as_view(), name='chapter-comment-list'),
+    path('users/<int:user_id>/comments', views.UserCommentList.as_view(), name='user-comment-list'),
+    path('comment/new', views.CommentCreate.as_view(), name='comment-create'),
+    path('comment/<int:pk>', views.CommentDetails.as_view(), name='comment-details'),
     # comics path
     path('comics/', views.ComicList.as_view(), name='comic-list'),
     path('comics/new', views.ComicCreate.as_view(), name='comic-create'),

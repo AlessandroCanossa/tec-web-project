@@ -71,7 +71,7 @@ class ChapterCreate(generics.CreateAPIView):
 class ChapterDetails(views.APIView):
 
     @staticmethod
-    def get_object(pk: int):
+    def get_object(pk: int)-> Chapter:
         try:
             return Chapter.objects.get(pk=pk)
         except Chapter.DoesNotExist:
@@ -109,7 +109,7 @@ class ChapterDetails(views.APIView):
 
 class ChapterImageList(views.APIView):
     @staticmethod
-    def get_chapter(pk):
+    def get_chapter(pk) -> Chapter:
         try:
             return Chapter.objects.get(pk)
         except Chapter.DoesNotExist:

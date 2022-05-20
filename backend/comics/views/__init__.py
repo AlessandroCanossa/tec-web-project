@@ -9,7 +9,11 @@ from .users import (UserList,
                     BuyListAdd,
                     HistoryList,
                     HistoryEntryAdd,
-                    HistoryEntryDelete
+                    HistoryEntryDelete,
+                    ChapterCommentList,
+                    UserCommentList,
+                    CommentCreate,
+                    CommentDetails
                     )
 from .comics import (ComicList,
                      ComicCreate,
