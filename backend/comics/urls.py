@@ -13,5 +13,5 @@ urlpatterns = [
     path(r'comics/<int:comic_id>/chapters', views.ChapterList.as_view(), name='chapter-list'),
     path(r'chapter/new', views.ChapterCreate.as_view(), name='chapter-create'),
     path(r'chapter/<int:pk>', views.ChapterDetails.as_view(), name='chapter-details'),
-    path(r'chapter/<int:pk>/images', views.ChapterImageList.as_view(), name='chapter-image-list'),
+    path(r'chapter/<int:chapter>/images', views.ChapterImageList.as_view(), name='chapter-image-list'),
 ]

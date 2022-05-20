@@ -108,4 +108,30 @@ class ChapterDetails(views.APIView):
 
 
 class ChapterImageList(views.APIView):
-    ...
+    @staticmethod
+    def get_chapter(pk):
+        try:
+            return Chapter.objects.get(pk)
+        except Chapter.DoesNotExist:
+            raise Http404
+
+    def get(self, request: Request, chapter: int, format=None) -> Response:
+        chapter = self.get_chapter(chapter)
+        images = ChapterImage.objects.filter(chapter_id=chapter)
+
+        serializer = ChapterImageSerializer(images, many=True, context={'request': request})
+
+        return Response(data=serializer.data)
+
+    def post(self, request: Request, chapter: int, format=None) -> Response:
+        chapter = self.get_chapter(chapter)
+
+        if chapter.comic.creator.pk != request.user.pk:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        serializer = ChapterImageSerializer(data=request.data, many=True, context={'request': request})
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
