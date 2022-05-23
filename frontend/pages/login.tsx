@@ -1,7 +1,6 @@
 import Head from "next/head";
 import Layout from "../components/layout";
 import FormInput from "../components/formInput";
-import LoginSocial from "../components/loginSocial";
 
 const Login = () => {
   return (
@@ -43,7 +42,6 @@ const Login = () => {
             </div>
           </form>
         </div>
-        <LoginSocial />
       </div>
     </Layout>
   );

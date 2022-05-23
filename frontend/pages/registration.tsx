@@ -4,7 +4,6 @@ import { NextPage } from "next/types";
 import { FocusEvent, useState } from "react";
 
 import Layout from "../components/layout";
-import LoginSocial from "../components/loginSocial";
 import FormInput from "../components/formInput";
 import styles from "../components/registration.module.css";
 
@@ -107,7 +106,6 @@ const Registration: NextPage = () => {
             </div>
           </form>
         </div>
-        <LoginSocial />
       </div>
     </Layout>
   );
