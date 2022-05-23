@@ -11,6 +11,9 @@ module.exports = {
       transformOrigin: {
         0: "0%",
       },
+      maxWidth: {
+        xs: "12rem",
+      },
     },
   },
   plugins: [],

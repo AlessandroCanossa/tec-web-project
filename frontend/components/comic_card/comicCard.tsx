@@ -23,7 +23,7 @@ export interface CardProps {
 const ComicCard = ({ props }: { props: CardProps }) => {
   return (
     <div className={styles.card}>
-      <div className={"col-start-1 hover:brightness-50"}>
+      <div className={"hover:brightness-50"}>
         <Link href={"/series/" + props.link} passHref>
           <Image
             src={props.cover}
@@ -35,8 +35,8 @@ const ComicCard = ({ props }: { props: CardProps }) => {
           />
         </Link>
       </div>
-      <div className="col-start-2 mr-2">
-        <div className="mb-8 flex flex-col">
+      <div className="mx-2 mb-4">
+        <div className="flex flex-col">
           <Link href={"/series/" + props.link} passHref>
             <a className="text-gray-900 font-bold text-xl mb-2 hover:text-gray-500">
               {props.title}
@@ -54,19 +54,6 @@ const ComicCard = ({ props }: { props: CardProps }) => {
               ></span>
               <p className="text-gray-700 text-xs">{props.status}</p>
             </div>
-          </div>
-          {/* chapters */}
-          <div className="flex flex-col">
-            {props.latest_chapters
-              .map((ch) => (
-                <Link href={`/${props.link}-chapter-${ch}`} passHref key={ch}>
-                  <a>Chapter {ch}</a>
-                </Link>
-              ))
-              .reverse()}
-            <Link href={`/series/${props.link}`} passHref>
-              <a>All chapters</a>
-            </Link>
           </div>
         </div>
       </div>
