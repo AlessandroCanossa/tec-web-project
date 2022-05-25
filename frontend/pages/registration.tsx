@@ -49,7 +49,7 @@ const Registration: NextPage = () => {
 
               <Form.Group
                 className="mb-3 position-relative"
-                controlId="validationFormik01"
+                controlId="validation_email"
               >
                 <Form.FloatingLabel label="Email address" className="mb-3">
                   <Form.Control
@@ -68,7 +68,7 @@ const Registration: NextPage = () => {
               </Form.Group>
               <Form.Group
                 className="mb-3 position-relative"
-                controlId="validationFormik01"
+                controlId="validation_username"
               >
                 <Form.FloatingLabel label="Username" className="mb-3">
                   <Form.Control
@@ -87,7 +87,7 @@ const Registration: NextPage = () => {
               </Form.Group>
               <Form.Group
                 className="mb-3 position-relative"
-                controlId="validationFormik01"
+                controlId="validation_first_name"
               >
                 <Form.FloatingLabel label="First Name" className="mb-3">
                   <Form.Control
@@ -106,7 +106,7 @@ const Registration: NextPage = () => {
               </Form.Group>
               <Form.Group
                 className="mb-3 position-relative"
-                controlId="validationFormik01"
+                controlId="validation_last_name"
               >
                 <Form.FloatingLabel label="Last Name" className="mb-3">
                   <Form.Control
@@ -125,7 +125,7 @@ const Registration: NextPage = () => {
               </Form.Group>
               <Form.Group
                 className="mb-3 position-relative"
-                controlId="validationFormik02"
+                controlId="validation_password"
               >
                 <Form.FloatingLabel label="Password">
                   <Form.Control

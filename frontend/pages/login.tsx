@@ -45,7 +45,7 @@ const Login = () => {
 
               <Form.Group
                 className="mb-3 position-relative"
-                controlId="validationFormik01"
+                controlId="validation_email"
               >
                 <Form.FloatingLabel label="Email address" className="mb-3">
                   <Form.Control
@@ -64,7 +64,7 @@ const Login = () => {
               </Form.Group>
               <Form.Group
                 className="mb-3 position-relative"
-                controlId="validationFormik02"
+                controlId="validation_password"
               >
                 <Form.FloatingLabel label="Password">
                   <Form.Control
