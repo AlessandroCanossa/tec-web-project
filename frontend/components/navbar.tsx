@@ -14,8 +14,8 @@ const MyNavbar = () => {
   const [logged, setLoggedState] = useState(true);
 
   return (
-    <Navbar className="navbar-expand-lg" variant="dark" bg="dark">
-      <Container>
+    <Navbar className={""} variant="dark" bg="dark">
+      <Container fluid style={{ margin: " 0 10rem", padding: "0" }}>
         <Link href="/" passHref>
           <Navbar.Brand>Home</Navbar.Brand>
         </Link>
@@ -35,28 +35,34 @@ const MyNavbar = () => {
               </Link>
             </Nav.Item>
           </Nav>
-          <Form className="d-flex">
-            <FormControl
-              type="search"
-              placeholder="Search"
-              className="me-2"
-              aria-label="Search"
-            />
-            <Button variant="outline-light">Search</Button>
-          </Form>
+          <section className={"d-inline-flex"} style={{ flexFlow: "row" }}>
+            <Form className="d-flex mx-2">
+              <FormControl
+                type="search"
+                placeholder="Search"
+                className="me-2"
+                aria-label="Search"
+              />
+              <Button variant="outline-light">Search</Button>
+            </Form>
 
-          {logged ? (
-            <UserMenu setLoggedState={setLoggedState} />
-          ) : (
-            <>
-              <Link href={"/login"} passHref>
-                <Button variant={"light"}>Log in</Button>
-              </Link>
-              <Link href={"/registration"} passHref>
-                <Button variant={"outline-light"}>Sign up</Button>
-              </Link>
-            </>
-          )}
+            {logged ? (
+              <UserMenu setLoggedState={setLoggedState} />
+            ) : (
+              <>
+                <Link href={"/login"} passHref>
+                  <Button variant={"light"} className={"mx-2"}>
+                    Log in
+                  </Button>
+                </Link>
+                <Link href={"/registration"} passHref>
+                  <Button variant={"outline-light"} className={"mx-2"}>
+                    Sign up
+                  </Button>
+                </Link>
+              </>
+            )}
+          </section>
         </Navbar.Collapse>
       </Container>
     </Navbar>
