@@ -1,8 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./comicCard.module.css";
+import { Card } from "react-bootstrap";
 
-import { StarIcon } from "@heroicons/react/solid";
+import { faStar, faCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export enum Status {
   ongoing = "Ongoing",
@@ -21,43 +23,57 @@ export interface CardProps {
 }
 
 const ComicCard = ({ props }: { props: CardProps }) => {
+  let dot_status;
+
+  switch (props.status) {
+    case Status.cancelled:
+      dot_status = styles.cancelled;
+      break;
+    case Status.completed:
+      dot_status = styles.completed;
+      break;
+    case Status.hiatus:
+      dot_status = styles.hiatus;
+      break;
+    case Status.ongoing:
+      dot_status = styles.ongoing;
+      break;
+  }
+
   return (
-    <div className={styles.card}>
-      <div className={"hover:brightness-50"}>
-        <Link href={"/series/" + props.link} passHref>
+    <Card className={styles.card}>
+      <Link href={props.link} passHref>
+        <Card.Img as={"a"}>
           <Image
-            src={props.cover}
-            width={240}
-            height={320}
-            layout={"responsive"}
+            width={"240px"}
+            height={"320px"}
             alt={props.title}
-            className="rounded-md"
+            src={props.cover}
+            className={styles.image}
           />
+        </Card.Img>
+      </Link>
+      <div style={{ padding: "0 4px", width: "100%" }}>
+        <Link href={props.link} passHref>
+          <Card.Title as={"a"} className={styles.title}>
+            {props.title}
+          </Card.Title>
         </Link>
-      </div>
-      <div className="mx-2 mb-4">
-        <div className="flex flex-col">
-          <Link href={"/series/" + props.link} passHref>
-            <a className="text-gray-900 font-bold text-xl mb-2 hover:text-gray-500">
-              {props.title}
-            </a>
-          </Link>
-          {/* status */}
-          <div className="flex flex-row justify-between">
-            <div className="flex gap-1 items-center p-0.5">
-              <p className="text-gray-700 text-xs ">{props.rating}</p>
-              <StarIcon className="w-4 h-4 text-amber-500" />
-            </div>
-            <div className="flex gap-1 items-center p-0.5">
-              <span
-                className={`${styles.status_dot} ${styles.completed}`}
-              ></span>
-              <p className="text-gray-700 text-xs">{props.status}</p>
-            </div>
+        <div className={styles.info_box}>
+          <div className={styles.rating_box}>
+            <span className={styles.rating}>{props.rating}</span>
+            <FontAwesomeIcon icon={faStar} className={styles.star_icon} />
+          </div>
+          <div className={styles.status_box}>
+            <FontAwesomeIcon
+              icon={faCircle}
+              className={`${styles.status_icon} ${dot_status}`}
+            />
+            <span className={styles.status}>{props.status}</span>
           </div>
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
 
