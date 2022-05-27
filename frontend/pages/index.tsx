@@ -4,12 +4,85 @@ import Layout from "../components/layout";
 
 import ComicCard from "../components/comic_card/comicCard";
 import { Status, CardProps } from "../components/comic_card/comicCard";
+import CardList from "../components/comic_card/cardList";
 
 const card_objs: CardProps[] = [
   {
     title: "Ex and Ash",
     rating: 9.8,
     status: Status.completed,
+    cover: "/images/ex-and-ash.jpg",
+    link: "ex-and-ash",
+    latest_chapters: [1, 2],
+  },
+  {
+    title: "Ex and Ash",
+    rating: 9.8,
+    status: Status.ongoing,
+    cover: "/images/ex-and-ash.jpg",
+    link: "ex-and-ash",
+    latest_chapters: [1, 2],
+  },
+  {
+    title: "Ex and Ash",
+    rating: 9.8,
+    status: Status.cancelled,
+    cover: "/images/ex-and-ash.jpg",
+    link: "ex-and-ash",
+    latest_chapters: [1, 2],
+  },
+  {
+    title: "Ex and Ash",
+    rating: 9.8,
+    status: Status.cancelled,
+    cover: "/images/ex-and-ash.jpg",
+    link: "ex-and-ash",
+    latest_chapters: [1, 2],
+  },
+  {
+    title: "Ex and Ash",
+    rating: 9.8,
+    status: Status.cancelled,
+    cover: "/images/ex-and-ash.jpg",
+    link: "ex-and-ash",
+    latest_chapters: [1, 2],
+  },
+  {
+    title: "Ex and Ash",
+    rating: 9.8,
+    status: Status.completed,
+    cover: "/images/ex-and-ash.jpg",
+    link: "ex-and-ash",
+    latest_chapters: [1, 2],
+  },
+  {
+    title: "Ex and Ash",
+    rating: 9.8,
+    status: Status.ongoing,
+    cover: "/images/ex-and-ash.jpg",
+    link: "ex-and-ash",
+    latest_chapters: [1, 2],
+  },
+  {
+    title: "Ex and Ash",
+    rating: 9.8,
+    status: Status.cancelled,
+    cover: "/images/ex-and-ash.jpg",
+    link: "ex-and-ash",
+    latest_chapters: [1, 2],
+  },
+  {
+    title: "Ex and Ash",
+    rating: 9.8,
+    status: Status.cancelled,
+    cover: "/images/ex-and-ash.jpg",
+    link: "ex-and-ash",
+    latest_chapters: [1, 2],
+  },
+  {
+    title: "Ex and Ash",
+    rating: 9.8,
+    status: Status.cancelled,
     cover: "/images/ex-and-ash.jpg",
     link: "ex-and-ash",
     latest_chapters: [1, 2],
@@ -25,9 +98,17 @@ const Home: NextPage = () => {
         {/* <link rel="icon" href="/favicon.ico" /> */}
       </Head>
 
-      {card_objs.map((card) => (
-        <ComicCard props={card} key={card.title}/>
-      ))}
+      <h2
+        style={{
+          width: "auto",
+          height: "40px",
+          marginTop: "20px",
+          padding: "0 10rem",
+        }}
+      >
+        Latest Updates
+      </h2>
+      <CardList cards={card_objs} />
     </Layout>
   );
 };
