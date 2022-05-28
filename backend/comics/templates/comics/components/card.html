@@ -1,0 +1,35 @@
+<div class="card" id="{{ comic.id }}">
+	<a href="/series/{{ comic.title.lower }}">
+		<img
+				alt="image"
+				src="/media/{{ comic.cover }}"
+				class="cover"
+		/>
+	</a>
+	<div class="lower_half">
+		<a href="/series/{{ comic.title.lower }}" class="text-decoration-none">
+			<h2 class="title">{{ comic.title }}</h2>
+		</a>
+		<div class="info">
+			<div class="rating_box">
+				<span>{{ comic.rating }}</span>
+				<i class="fa-solid fa-star star"></i>
+			</div>
+			<div class="status_box">
+				{% if comic.status == 'O' %}
+					<i class="fa-solid fa-circle status_dot ongoing"></i>
+					<span class="status">Ongoing</span>
+				{% elif comic.status == 'H' %}
+					<i class="fa-solid fa-circle status_dot hiatus"></i>
+					<span class="status">Hiatus</span>
+				{% elif comic.status == 'C' %}
+					<i class="fa-solid fa-circle status_dot completed"></i>
+					<span class="status">Completed</span>
+				{% elif comic.status == 'D' %}
+					<i class="fa-solid fa-circle status_dot cancelled"></i>
+					<span class="status">Cancelled</span>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>

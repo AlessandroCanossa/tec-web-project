@@ -1,0 +1,16 @@
+.new_uploads {
+  width: auto;
+  height: 40px;
+  margin: 20px 0;
+  padding: 0 100px;
+}
+
+.card_list {
+  gap: 50px 72px;
+  width: 100%;
+  height: 865px;
+  display: flex;
+  padding: 0 100px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}

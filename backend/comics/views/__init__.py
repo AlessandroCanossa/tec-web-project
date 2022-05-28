@@ -23,3 +23,5 @@ from .comics import (ComicList,
                      ChapterImageList,
                      ChapterCreate,
                      GenreList)
+
+from .views import index
