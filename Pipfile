@@ -10,6 +10,7 @@ autopep8 = "1.6.0"
 pillow = "*"
 django-dynamic-image = "*"
 django-filter = "*"
+fontawesomefree = "*"
 
 [dev-packages]
 
