@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 
 from . import views
 
@@ -7,6 +7,10 @@ urlpatterns = [
     path('', views.index, name='index'),
     # path('login/', views.login, name='login'),
     # path('registration/', views.registration, name='registration'),
-    path('series/', views.series_list, name='series'),
-    path('series/<int:comic_id>/', views.comic_details, name='comic_detail'),
+    path('comics/', include([
+        path('', views.comics_list, name='comic_list'),
+        path('<int:comic_id>/', views.comic_details, name='comic_detail'),
+        path('rate_comic/<int:comic_id>/<int:rating>', views.add_rating, name='rate_comic'),
+        path('save_bookmark/<int:comic_id>', views.add_bookmark, name='add_bookmark'),
+    ]))
 ]
