@@ -62,3 +62,14 @@ class Market(models.Model):
 
     def __str__(self):
         return f'{self.cost}€ = {self.coins} coins'
+
+
+class Rating(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    comic = models.ForeignKey(to=Comic, on_delete=models.CASCADE, related_name='user_rating')
+    rating = models.PositiveIntegerField()
+
+    models.UniqueConstraint(fields=['user', 'comic'], name='unique_rating')
+
+    def __str__(self):
+        return f'{self.user.username} - {self.comic.title} - {self.rating}'

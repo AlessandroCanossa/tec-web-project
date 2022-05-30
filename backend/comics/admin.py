@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Comic, Genre, Chapter, ChapterImage, ReadHistory, BuyList, Comment, Library, Market
+from .models import *
 
 # Register your models here.
 
@@ -13,3 +13,4 @@ admin.site.register(BuyList)
 admin.site.register(Comment)
 admin.site.register(Market)
 admin.site.register(Library)
+admin.site.register(Rating)
