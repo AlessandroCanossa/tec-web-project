@@ -24,4 +24,4 @@ from .comics import (ComicList,
                      ChapterCreate,
                      GenreList)
 
-from .views import index, series_list, comic_details
+from .views import *
