@@ -1,3 +1,5 @@
+@import "status_rating.css";
+
 .card {
   height: 420px;
   width: 220px;
@@ -66,12 +68,6 @@
   flex-direction: row;
 }
 
-.star {
-  font-size: 15px;
-  padding-left: 2px;
-  color: orange;
-}
-
 .status_box {
   flex: 1;
   width: inherit;
@@ -83,24 +79,5 @@
   justify-content: flex-end;
 }
 
-.status_dot {
-  font-size: 15px;
-  padding-right: 2px;
-}
 
 
-.status_dot.cancelled {
-  color: red;
-}
-
-.status_dot.hiatus {
-  color: orange;
-}
-
-.status_dot.ongoing {
-  color: green;
-}
-
-.status_dot.completed {
-  color: purple;
-}
