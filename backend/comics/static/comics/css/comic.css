@@ -1,0 +1,28 @@
+@import "status_rating.css";
+
+.extra-info {
+  height: 29px;
+}
+
+.top_half {
+  height: 713px;
+  padding: 5rem 15rem;
+}
+
+.thumbnail {
+  width: 350px;
+  height: 500px;
+  box-shadow: 0 0 10px 5px #373535;
+  object-fit: cover;
+  border-radius: 25px;
+  margin-bottom: 1.5rem;
+}
+
+.info {
+  margin-left: 2rem;
+}
+
+.title {
+  font-size: 3rem;
+}
+

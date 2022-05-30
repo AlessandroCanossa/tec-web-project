@@ -1,0 +1,124 @@
+{% extends "comics/base.html" %}
+{% load static %}
+{% block head %}
+	<title>{{ comic.title }}</title>
+	<link rel="stylesheet" href="{% static 'comics/css/comic.css' %}" type="text/css"/>
+{% endblock %}
+
+{% block main %}
+	<section class="top_half d-flex flex-row w-100 bg-opacity-75 bg-dark">
+		<div class="d-flex flex-column">
+			<img
+					alt="image"
+					src="/media/{{ comic.cover }}"
+					class="thumbnail border-0"
+			/>
+			<div class="d-flex flex-row">
+				{% if bookmark %}
+					<button class="btn btn-light w-100 me-1" onclick="save_bookmark({{ comic.id }})">
+						<i class="fas fa-bookmark"></i>
+					</button>
+				{% else %}
+					<button class="btn btn-outline-light w-100 me-1" onclick="save_bookmark({{ comic.id }})">
+						Bookmark
+					</button>
+				{% endif %}
+
+				{% if rating %}
+					<div class="dropdown">
+						<button class="btn btn-light dropdown-toggle" id="ratingDropdown" data-bs-toggle="dropdown"
+						        aria-expanded="false">
+							<i class="fas fa-star"></i>
+						</button>
+						<ul class="dropdown-menu" aria-labelledby="ratingDropdown">
+							{% for i in ratingRange %}
+								<li class="dropdown-item">
+									<a onclick="rate_comic({{ comic.id }}, i)">{{ i }}</a>
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
+				{% else %}
+					<div class="dropdown">
+						<button class="btn btn-outline-light dropdown-toggle" id="ratingDropdown"
+						        data-bs-toggle="dropdown"
+						        aria-expanded="false">
+							<i class="fas fa-star"></i>
+						</button>
+						<ul class="dropdown-menu" aria-labelledby="ratingDropdown">
+							{% for i in ratingRange %}
+								<li class="dropdown-item">
+									<a onclick="rate_comic({{ comic.id }}, {{ i }})">{{ i }}</a>
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
+				{% endif %}
+			</div>
+
+		</div>
+		<div class="info d-flex flex-column">
+			<h1 class="title text-white ">{{ comic.title }}</h1>
+			<a
+					href="/users/{{ comic.creator_id }}"
+					class="text-decoration-none"
+			>
+				<h3 class="author text-white mb-3">{{ author_name }}</h3>
+			</a>
+			<div class="extra-info d-flex flex-row align-items-center align-self-start justify-content-between mb-3">
+				<div class="d-flex flex-row align-items-center pe-3">
+					<span class="text-white">{{ comic.rating }}</span>
+					<i class="fa-solid fa-star star"></i>
+				</div>
+				<div class="d-flex flex-row justify-content-end align-items-center">
+					{% if comic.status == 'O' %}
+						<i class="fa-solid fa-circle status_dot ongoing"></i>
+						<span class="status text-white">Ongoing</span>
+					{% elif comic.status == 'H' %}
+						<i class="fa-solid fa-circle status_dot hiatus"></i>
+						<span class="status text-white">Hiatus</span>
+					{% elif comic.status == 'C' %}
+						<i class="fa-solid fa-circle status_dot completed"></i>
+						<span class="status text-white">Completed</span>
+					{% elif comic.status == 'D' %}
+						<i class="fa-solid fa-circle status_dot cancelled"></i>
+						<span class="status text-white">Cancelled</span>
+					{% endif %}
+				</div>
+
+			</div>
+			<div class="w-100 d-flex align-items-start mb-4">
+				{% for genre in genres %}
+					<a
+							href="/series?g={{ genre.id }}"
+							class="text-decoration-none"
+					>
+						<button class="btn btn-outline-light mx-1" id="{{ genre.id }}">{{ genre.name }}</button>
+					</a>
+				{% endfor %}
+			</div>
+			<div class="d-flex flex-column w-100 align-items-start mb-3">
+				<h2 class="text-white mb-2">
+					Synopsis
+				</h2>
+				<span class="text-white">
+					{{ comic.summary }}
+				</span>
+			</div>
+
+			{#	#}
+			<div class="d-flex flex-row align-self-start ">
+				<div class="me-3">
+					<i class="fa-solid fa-eye text-white"></i>
+					<span class="text-white">{{ comic.watches }}</span>
+				</div>
+				<div>
+					<i class="fa-solid fa-bookmark text-white"></i>
+					<span class="text-white">{{ comic.follows }}</span>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script src="{% static 'comics/js/comic.js' %}"></script>
+{% endblock %}
