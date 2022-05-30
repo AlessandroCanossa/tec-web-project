@@ -1,5 +1,5 @@
 <div class="card" id="{{ comic.id }}">
-	<a href="/series/{{ comic.title.lower }}">
+	<a href="/series/{{ comic.id }}">
 		<img
 				alt="image"
 				src="/media/{{ comic.cover }}"
@@ -7,7 +7,7 @@
 		/>
 	</a>
 	<div class="lower_half">
-		<a href="/series/{{ comic.title.lower }}" class="text-decoration-none">
+		<a href="/series/{{ comic.id }}" class="text-decoration-none">
 			<h2 class="title">{{ comic.title }}</h2>
 		</a>
 		<div class="info">
