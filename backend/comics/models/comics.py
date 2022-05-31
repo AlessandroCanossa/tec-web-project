@@ -42,16 +42,17 @@ class Comic(models.Model):
 
 
 class Chapter(models.Model):
-    title = models.CharField(max_length=255)
+    # title = models.CharField(max_length=255)
+    chapter_num = models.PositiveIntegerField()
     comic = models.ForeignKey(to=Comic, on_delete=models.CASCADE)
     pub_date = models.DateTimeField(auto_now_add=True)
     likes = models.PositiveBigIntegerField(default=0)
     cost = models.PositiveIntegerField(default=50)
 
-    models.UniqueConstraint(fields=['title', 'comic'], name='comic_chapter')
+    models.UniqueConstraint(fields=['chapter_num', 'comic'], name='comic_chapter')
 
     def __str__(self):
-        return f'{self.comic.title} - {self.title}'
+        return f'{self.comic.title} - chapter-{self.chapter_num}'
 
 
 class ChapterImage(models.Model):

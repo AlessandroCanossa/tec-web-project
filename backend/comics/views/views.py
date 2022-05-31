@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, HttpResponse, Http404
 from django.http import HttpRequest
-from ..models import Comic, Chapter, User, Library, Rating
+from ..models import Comic, Chapter, User, Library, Rating, BuyList, ChapterImage
 
 
 def index(request) -> HttpResponse:
@@ -56,8 +56,11 @@ def comic_details(request, comic_id) -> HttpResponse:
 
     genres = comic.genre.all()[:4]
 
+    chapters = Chapter.objects.filter(comic=comic_id).order_by('chapter_num')
+
     bookmark = None
     rating = None
+    buy_list = None
     if request.user.is_authenticated:
         try:
             bookmark = Library.objects.get(user=request.user.id, comic=comic.id)
@@ -69,13 +72,19 @@ def comic_details(request, comic_id) -> HttpResponse:
         except Rating.DoesNotExist:
             ...
 
+        bought = BuyList.objects.filter(user=request.user.id, chapter__comic_id=comic.id)
+        if bought:
+            buy_list = [chapter.chapter_id for chapter in bought]
+
     context = {
         'comic': comic,
         'author_name': author_name,
         'genres': genres,
         'bookmark': bookmark,
         'rating': rating,
-        'ratingRange': range(1, 11)
+        'ratingRange': range(1, 11),
+        'chapters': chapters,
+        'buy_list': buy_list
     }
 
     return render(request, 'comics/comic.html', context)
@@ -137,6 +146,7 @@ def registration(request):
     ...
 
 
+@login_required(login_url='/login/')
 def profile(request):
     ...
 
@@ -145,9 +155,35 @@ def user_details(request, user_id):
     ...
 
 
+@login_required(login_url='/login/')
 def settings(request):
     ...
 
 
+@login_required(login_url='/login/')
 def logout(request):
     ...
+
+
+@login_required(login_url='/login/')
+def buy_chapter(request, chapter_id):
+    ...
+
+
+@login_required(login_url='/login/')
+def chapter_details(request, comic_id, chapter_id):
+    try:
+        chapter = Chapter.objects.get(comic_id=comic_id, chapter_num=chapter_id)
+    except Chapter.DoesNotExist:
+        return Http404("Chapter does not exist")
+
+    images = ChapterImage.objects.filter(chapter=chapter)
+
+    print(chapter, images)
+
+    context = {
+        'chapter': chapter,
+        'images': images
+    }
+
+    return render(request, 'comics/chapter.html', context)
