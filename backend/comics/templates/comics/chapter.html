@@ -1,0 +1,107 @@
+{% extends 'comics/base.html' %}
+
+{% block head %}
+	<title>{{ chapter.comic.title }} - Chapter {{ chapter.chapter_num }}</title>
+{% endblock %}
+
+{% block main %}
+	<div class="container d-flex flex-row justify-content-between px-5 mt-3">
+		<div class="d-flex flex-row">
+			<a href="{% url 'comics:comic_detail' comic_id=chapter.comic_id %}" class="me-2">
+				<button class="btn btn-dark">
+					All chapters
+				</button>
+			</a>
+			<div class="dropdown">
+				<button class="btn btn-dark dropdown-toggle" id="chapterListDropdown" data-bs-toggle="dropdown"
+				        aria-expanded="false">Select chapter
+				</button>
+				<ul class="dropdown-menu" aria-labelledby="chapterListDropdown">
+
+					{% for c in chapter_list %}
+						<li class="dropdown-item">
+							<a class="text-decoration-none text-dark"
+							   href="{% url 'comics:chapter_detail' comic_id=chapter.comic_id chapter_id=c.chapter_num %} ">
+								Chapter {{ c.chapter_num }}
+							</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+
+		</div>
+		<form id="likeForm">
+			{% csrf_token %}
+			<button class="btn btn-dark" id="likeBtn">
+				<span>
+					{{ chapter.likes }}
+				</span>
+
+				{% if like %}
+					<i id="heartIcon" class="fa-solid fa-heart"></i>
+				{% else %}
+					<i id="heartIcon" class="fa-regular fa-heart"></i>
+				{% endif %}
+			</button>
+		</form>
+		<div class="d-flex flex-row">
+			{% if prev_chapter != None %}
+				<a href="{% url 'comics:chapter_detail' comic_id=chapter.comic_id chapter_id=prev_chapter %}">
+					<button class="btn btn-dark">
+						Prev
+					</button>
+				</a>
+			{% else %}
+				<a>
+					<button class="btn btn-dark disabled">
+						Prev
+					</button>
+				</a>
+			{% endif %}
+			{% if next_chapter != None %}
+				<a href="{% url 'comics:chapter_detail' comic_id=chapter.comic_id chapter_id=next_chapter %}"
+				   class="ms-2">
+					<button class="btn btn-dark">
+						Next
+					</button>
+				</a>
+			{% else %}
+				<a class="ms-2">
+					<button class="btn btn-dark disabled">
+						Next
+					</button>
+				</a>
+			{% endif %}
+		</div>
+
+	</div>
+	<div class="container align-items-center d-flex flex-column">
+		{% for image in images %}
+			<img src="/media/{{ image.image }}" alt="Chapter-{{ chapter.chapter_num }}"/>
+		{% endfor %}
+	</div>
+{% endblock %}
+
+
+{% block javascript %}
+	<script>
+      $("#likeForm").submit((e) => {
+        e.preventDefault();
+        $.ajax(
+            {
+              url: "{% url 'comics:like_chapter' chapter_id=chapter.id %}",
+              type: 'POST',
+              headers: {
+                'X-CSRFToken': csrftoken
+              },
+              success: (data) => {
+                const likeInnerNodes = $("#likeBtn").children();
+                likeInnerNodes[0].innerHTML = data;
+                likeInnerNodes[1].classList.toggle("fa-solid");
+                likeInnerNodes[1].classList.toggle("fa-regular");
+              }
+            }
+        );
+      });
+	</script>
+{% endblock %}

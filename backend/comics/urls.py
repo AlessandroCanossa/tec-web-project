@@ -9,6 +9,7 @@ urlpatterns = [
         path('', views.comics_list, name='comic_list'),
         path('<int:comic_id>/', views.comic_details, name='comic_detail'),
         path('<int:comic_id>/chapter-<int:chapter_id>/', views.chapter_details, name='chapter_detail'),
+        path('like_chapter/<int:chapter_id>/', views.like_chapter, name='like_chapter'),
         path('buy_chapter/<int:chapter_id>/', views.buy_chapter, name='buy_chapter'),
         path('rate_comic/<int:comic_id>/<int:rating>', views.add_rating, name='rate_comic'),
         path('save_bookmark/<int:comic_id>', views.add_bookmark, name='add_bookmark'),

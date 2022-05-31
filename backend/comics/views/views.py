@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, HttpResponse, Http404
 from django.http import HttpRequest
-from ..models import Comic, Chapter, User, Library, Rating, BuyList, ChapterImage
+from ..models import Comic, Chapter, User, Library, Rating, BuyList, ChapterImage, Like
 
 
 def index(request) -> HttpResponse:
@@ -179,11 +179,41 @@ def chapter_details(request, comic_id, chapter_id):
 
     images = ChapterImage.objects.filter(chapter=chapter)
 
-    print(chapter, images)
+    chapter_list = Chapter.objects.filter(comic_id=comic_id)
+
+    prev_chapter = None
+    next_chapter = None
+    if chapter.chapter_num > 0:
+        prev_chapter = Chapter.objects.get(comic_id=comic_id, chapter_num=chapter.chapter_num - 1)
+
+    if chapter.chapter_num < chapter_list.count() - 1:
+        next_chapter = Chapter.objects.get(comic_id=comic_id, chapter_num=chapter.chapter_num + 1)
 
     context = {
         'chapter': chapter,
-        'images': images
+        'images': images,
+        'prev_chapter': prev_chapter,
+        'next_chapter': next_chapter,
+        'chapter_list': chapter_list
     }
 
     return render(request, 'comics/chapter.html', context)
+
+
+@login_required(login_url='/login/')
+def like_chapter(request, chapter_id):
+    if request.method == 'POST':
+        user_id = request.user.id
+        chapter = Chapter.objects.get(pk=chapter_id)
+
+        try:
+            chapter_like = Like.objects.get(user_id=user_id, chapter_id=chapter_id)
+            chapter_like.delete()
+            chapter.likes -= 1
+        except Like.DoesNotExist:
+            chapter_like = Like.objects.create(user_id=user_id, chapter_id=chapter_id)
+            chapter.likes += 1
+
+        chapter.save()
+
+        return HttpResponse(chapter.likes, status=200)
