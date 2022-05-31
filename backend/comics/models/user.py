@@ -73,3 +73,13 @@ class Rating(models.Model):
 
     def __str__(self):
         return f'{self.user.username} - {self.comic.title} - {self.rating}'
+
+
+class Like(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    chapter = models.ForeignKey(to=Chapter, on_delete=models.CASCADE)
+
+    models.UniqueConstraint(fields=['user', 'chapter'], name='unique_like')
+
+    def __str__(self):
+        return f'{self.user.username} - {self.chapter.comic.title} - {self.chapter.chapter_num}'
