@@ -117,12 +117,58 @@
 			</div>
 		</div>
 	</section>
+	<section class="bottom_half d-flex flex-column w-100 my-4 align-items-center">
+		<div class="w-50 mb-3 d-flex flex-row justify-content-between">
+			<span class="align-self-start  fs-3"> Latest release</span>
+			<button class="btn btn-outline-dark" onclick="reverse_chapter_list()">
+				<i class="fa-solid fa-arrow-right-arrow-left" style="transform: rotate(90deg)"></i>
+			</button>
+		</div>
+		<ul class="list-group w-50" id="chapter-list">
+			{% for chapter in chapters %}
 
+				<li id="chapter_{{ chapter.chapter_num }}" class="list-group-item d-flex bg-dark mb-2 w-100">
+					{% if buy_list and chapter.id in buy_list %}
+						<a href="/comics/{{ comic.id }}/chapter-{{ chapter.chapter_num }}"
+						   class="text-white text-decoration-none w-100 d-flex align-items-center justify-content-between">
+							<div class="w-auto invisible">
+								<i class="fa-solid fa-coins"></i>
+								<span class="">{{ chapter.cost }}</span>
+							</div>
+							<span class="">Chapter {{ chapter.chapter_num }}</span>
+							<i class="fa-solid fa-lock-open align-items-end"></i>
+
+						</a>
+					{% else %}
+						{% if user.is_authenticated %}
+							<a href="#" onclick="showBuyModal({{ chapter.id }})"
+							   class="text-white text-decoration-none w-100 d-flex align-items-center
+							justify-content-between">
+						{% else %}
+							<a href="#" data-bs-toggle="modal" data-bs-target="#anonUserModal"
+							   class="text-white text-decoration-none w-100 d-flex align-items-center
+							justify-content-between">
+						{% endif %}
+					<div class="w-auto">
+						<i class="fa-solid fa-coins"></i>
+						<span class="">{{ chapter.cost }}</span>
+					</div>
+					<span class="">Chapter {{ chapter.chapter_num }}</span>
+					<i class="fa-solid fa-lock align-items-end"></i>
+
+					</a>
+					{% endif %}
+				</li>
+			{% endfor %}
+		</ul>
+	</section>
+
+	{% include 'comics/components/modal.html' %}
 
 {% endblock %}
 
 {% block javascript %}
-	{#	<script src="{% static 'comics/js/comic.js' %}"></script>#}
+	<script src="{% static 'comics/js/comic.js' %}"></script>
 	<script>
       $("#bookmark_form").submit((e) => {
         e.preventDefault();

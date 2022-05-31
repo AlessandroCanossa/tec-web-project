@@ -1,0 +1,41 @@
+<div class="modal fade" id="buyModal" aria-labelledby="buyModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Buy chapter</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p>Click buy to buy this chapter</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Close</button>
+				<a id="buyChapter" href="#">
+					<button type="button" class="btn btn-dark">Buy</button>
+				</a>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<div class="modal fade" id="anonUserModal" aria-labelledby="anonUserModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Login required</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p>To buy this chapter you are required to login first.</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Close</button>
+				<a href="{% url 'comics:login' %}">
+					<button type="button" class="btn btn-dark">Login</button>
+				</a>
+			</div>
+		</div>
+
+	</div>
+</div>

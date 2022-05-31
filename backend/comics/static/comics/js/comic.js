@@ -1,27 +1,12 @@
-const save_bookmark = (comic_id) => {
-  $.ajax({
-    url: '/comics/save_bookmark/' + comic_id,
-    type: 'POST',
-    success: function (data) {
-      if (data.success) {
-        $('#bookmark_').removeClass('btn-outline-primary').addClass('btn-primary');
-      } else {
-        alert(data.message);
-      }
-    }
+const reverse_chapter_list = () => {
+  const chapter_list = $("#chapter-list li");
+  const chapter_array = Array.prototype.slice.call(chapter_list);
+  chapter_array.forEach((chapter) => {
+    chapter.parentNode.insertBefore(chapter, chapter.parentNode.firstChild);
   });
-};
+}
 
-const rate_comic = (comic_id, rating) => {
-  $.ajax({
-    url: `/comics/rate_comic?c=${comic_id}&r=${rating}`,
-    type: 'POST',
-    success: function (data) {
-      if (data.success) {
-        $('#rating_').removeClass('btn-outline-primary').addClass('btn-primary');
-      } else {
-        alert(data.message);
-      }
-    }
-  });
-};
+const showBuyModal = (chapter_id) => {
+  $("#buyChapter")[0].href = `/comics/buy_chapter/${chapter_id}`;
+  $("#buyModal").modal("show");
+}
