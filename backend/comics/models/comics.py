@@ -65,6 +65,6 @@ class ChapterImage(models.Model):
         return self.image.name
 
     def get_upload_to(self, field_name):
-        chapter_name = self.chapter.title.lower().replace(' ', '-')
+        chapter_name = self.chapter.chapter_num
         comic_name = self.chapter.comic.title.lower().replace(' ', '-')
         return f'chapter/{comic_name}/{chapter_name}'
