@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, HttpResponse, Http404
 from django.http import HttpRequest
 from ..models import Comic, Chapter, User, Library, Rating, BuyList, ChapterImage, Like
+import json
 
 
 def index(request) -> HttpResponse:
@@ -96,20 +97,17 @@ def add_bookmark(request: HttpRequest, comic_id: int) -> HttpResponse:
         user_id = request.user.id
         comic = Comic.objects.get(pk=comic_id)
 
-        message = None
         try:
             library = Library.objects.get(user=user_id, comic=comic_id)
             library.delete()
-            message = 'Bookmark removed'
             comic.follows -= 1
         except Library.DoesNotExist:
             library = Library.objects.create(user_id=user_id, comic_id=comic_id)
             comic.follows += 1
-            message = 'Bookmark added'
 
         comic.save()
 
-        return HttpResponse(message, status=200)
+        return HttpResponse(comic.follows, status=200)
     return HttpResponse(status=403)
 
 
@@ -119,22 +117,37 @@ def add_rating(request, comic_id, rating) -> HttpResponse:
         user_id = request.user.id
         comic = Comic.objects.get(pk=comic_id)
 
+        message = ""
         try:
-            rating_obj = Rating.objects.get(user_id=user_id, comic_id=comic_id)
-            rating_obj.rating = rating
-            rating_obj.save()
+            rating_obj = Rating.objects.get(user_id=user_id, comic=comic)
+            if rating == 0:
+                rating_obj.delete()
+                message = "d"
+            else:
+                rating_obj.rating = rating
+                rating_obj.save()
+                message = "u"
 
         except Rating.DoesNotExist:
-            rating_obj = Rating.objects.create(user=user_id, comic=comic_id, rating=rating)
+            rating_obj = Rating.objects.create(user_id=user_id, comic=comic, rating=rating)
+            message = "a"
 
         comic_ratings = Rating.objects.filter(comic=comic_id)
         values = list(comic_ratings.values('rating'))
         val_list = [x['rating'] for x in values]
-        avg_rating = sum(val_list) / len(val_list)
-        comic.rating = avg_rating
+        if val_list:
+            avg_rating = sum(val_list) / len(val_list)
+            comic.rating = avg_rating
+        else:
+            comic.rating = 0
         comic.save()
 
-        return HttpResponse(status=200)
+        data = {
+            'message': message,
+            'rating': comic.rating
+        }
+
+        return HttpResponse(json.dumps(data), status=200)
     return HttpResponse(status=403)
 
 
@@ -189,12 +202,19 @@ def chapter_details(request, comic_id, chapter_id):
     if chapter.chapter_num < chapter_list.count() - 1:
         next_chapter = Chapter.objects.get(comic_id=comic_id, chapter_num=chapter.chapter_num + 1)
 
+    like = None
+    try:
+        like = Like.objects.get(user_id=request.user.id, chapter=chapter)
+    except Like.DoesNotExist:
+        ...
+
     context = {
         'chapter': chapter,
         'images': images,
         'prev_chapter': prev_chapter,
         'next_chapter': next_chapter,
-        'chapter_list': chapter_list
+        'chapter_list': chapter_list,
+        'like': like
     }
 
     return render(request, 'comics/chapter.html', context)

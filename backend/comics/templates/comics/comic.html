@@ -18,11 +18,11 @@
 
 					{% csrf_token %}
 					{% if bookmark %}
-						<button class="btn btn-light w-100" type="submit">
+						<button id="bookmarkBtn" class="btn btn-light w-100" type="submit">
 							<i class="fas fa-bookmark"></i>
 						</button>
 					{% else %}
-						<button class="btn btn-outline-light w-100" type="submit">
+						<button id="bookmarkBtn" class="btn btn-outline-light w-100" type="submit">
 							Bookmark
 						</button>
 					{% endif %}
@@ -44,6 +44,8 @@
 							</button>
 						{% endif %}
 						<div class="dropdown-menu" aria-labelledby="ratingDropdown">
+							<button class="dropdown-item" type="submit" value="0" id="rating_btn_{{ i }}">Remove
+							</button>
 							{% for i in ratingRange %}
 								<button class="dropdown-item" value="{{ i }}" id="rating_btn_{{ i }}"
 								        type="submit">{{ i }}</button>
@@ -65,7 +67,7 @@
 			</a>
 			<div class="extra-info d-flex flex-row align-items-center align-self-start justify-content-between mb-3">
 				<div class="d-flex flex-row align-items-center pe-3">
-					<span class="text-white">{{ comic.rating }}</span>
+					<span id="rating" class="text-white">{{ comic.rating }}</span>
 					<i class="fa-solid fa-star star"></i>
 				</div>
 				<div class="d-flex flex-row justify-content-end align-items-center">
@@ -112,7 +114,7 @@
 				</div>
 				<div>
 					<i class="fa-solid fa-bookmark text-white"></i>
-					<span class="text-white">{{ comic.follows }}</span>
+					<span id="follows" class="text-white">{{ comic.follows }}</span>
 				</div>
 			</div>
 		</div>
@@ -184,10 +186,15 @@
                 'X-CSRFToken': csrftoken
               },
               success: (data) => {
-                alert(data);
-              },
-              error: (data) => {
-                alert(data)
+                document.getElementById('follows').innerHTML = data;
+                const bookmarkBtn = document.getElementById('bookmarkBtn');
+                if (bookmarkBtn.innerHTML.trim() === 'Bookmark') {
+                  bookmarkBtn.innerHTML = '<i class="fas fa-bookmark"></i>';
+                } else {
+                  bookmarkBtn.innerHTML = 'Bookmark';
+                }
+                bookmarkBtn.classList.toggle('btn-light');
+                bookmarkBtn.classList.toggle('btn-outline-light');
               }
             }
         );
@@ -201,6 +208,16 @@
               type: 'POST',
               headers: {
                 'X-CSRFToken': csrftoken
+              },
+              success: (data) => {
+                const json_data = JSON.parse(data);
+
+                document.getElementById('rating').innerHTML = json_data['rating'];
+                if (json_data['message'] !== 'u') {
+                  const ratingBtn = document.getElementById('ratingDropdown');
+                  ratingBtn.classList.toggle('btn-light');
+                  ratingBtn.classList.toggle('btn-outline-light');
+                }
               }
             }
         );
