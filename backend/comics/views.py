@@ -188,13 +188,31 @@ def settings(request):
 
 
 @login_required(login_url='comics:login')
-def logout(request):
-    ...
-
-
-@login_required(login_url='comics:login')
 def buy_chapter(request, chapter_id):
-    ...
+    if request.method == 'POST':
+        user = User.objects.get(pk=request.user.id)
+
+        try:
+            chapter = Chapter.objects.get(pk=chapter_id)
+        except Chapter.DoesNotExist:
+            raise Http404("Chapter does not exist")
+
+        try:
+            buy_list = BuyList.objects.get(user=user, chapter=chapter)
+            message = "already bought"
+        except BuyList.DoesNotExist:
+            if user.coins >= chapter.cost:
+                user.coins -= chapter.cost
+                user.save()
+                buy_list = BuyList.objects.create(user=user, chapter=chapter)
+                message = "Successfully bought chapter"
+            else:
+                message = "Not enough coins"
+
+        context = {
+            'message': message,
+        }
+        return HttpResponse(json.dumps(context), status=200)
 
 
 @login_required(login_url='comics:login')

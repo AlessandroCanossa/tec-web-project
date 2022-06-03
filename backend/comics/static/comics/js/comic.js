@@ -7,6 +7,25 @@ const reverse_chapter_list = () => {
 }
 
 const showBuyModal = (chapter_id) => {
-  $("#buyChapter")[0].href = `/comics/buy_chapter/${chapter_id}`;
+  $("#buyForm #buyValue").val(chapter_id);
   $("#buyModal").modal("show");
 }
+
+$('#buyForm').submit((e) => {
+  e.preventDefault();
+  const chapter_id = $("#buyForm #buyValue").val();
+  console.log(chapter_id);
+  $.ajax({
+    url: `/comics/buy_chapter/${chapter_id}`,
+    type: 'POST',
+    headers: {
+      'X-CSRFToken': csrftoken
+    },
+    success: (data) => {
+      $("#buyModal").modal("hide");
+      data = JSON.parse(data);
+      alert(data['message']);
+      location.reload();
+    }
+  })
+})

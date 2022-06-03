@@ -10,9 +10,11 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Close</button>
-				<a id="buyChapter" href="#">
-					<button type="button" class="btn btn-dark">Buy</button>
-				</a>
+				<form id="buyForm" method="POST">
+					{% csrf_token %}
+					<input id="buyValue" type="hidden" name="chapter_id" value="">
+					<button type="submit" class="btn btn-dark">Buy</button>
+				</form>
 			</div>
 		</div>
 
