@@ -186,15 +186,15 @@
                 'X-CSRFToken': csrftoken
               },
               success: (data) => {
-                document.getElementById('follows').innerHTML = data;
-                const bookmarkBtn = document.getElementById('bookmarkBtn');
-                if (bookmarkBtn.innerHTML.trim() === 'Bookmark') {
-                  bookmarkBtn.innerHTML = '<i class="fas fa-bookmark"></i>';
+                $('#follows').html(data);
+                const bookmarkBtn = $('#bookmarkBtn');
+                if (bookmarkBtn.html().trim() === 'Bookmark') {
+                  bookmarkBtn.html('<i class="fas fa-bookmark"></i>');
                 } else {
-                  bookmarkBtn.innerHTML = 'Bookmark';
+                  bookmarkBtn.html('Bookmark');
                 }
-                bookmarkBtn.classList.toggle('btn-light');
-                bookmarkBtn.classList.toggle('btn-outline-light');
+                bookmarkBtn.toggleClass('btn-light');
+                bookmarkBtn.toggleClass('btn-outline-light');
               }
             }
         );
@@ -212,11 +212,11 @@
               success: (data) => {
                 const json_data = JSON.parse(data);
 
-                document.getElementById('rating').innerHTML = json_data['rating'];
+                $('#rating').html(json_data['rating']);
                 if (json_data['message'] !== 'u') {
-                  const ratingBtn = document.getElementById('ratingDropdown');
-                  ratingBtn.classList.toggle('btn-light');
-                  ratingBtn.classList.toggle('btn-outline-light');
+                  const ratingBtn = $('#ratingDropdown');
+                  ratingBtn.toggleClass('btn-light');
+                  ratingBtn.toggleClass('btn-outline-light');
                 }
               }
             }
