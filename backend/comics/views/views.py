@@ -1,7 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, HttpResponse, Http404
 from django.http import HttpRequest
-from ..models import Comic, Chapter, User, Library, Rating, BuyList, ChapterImage, Like
+from django.core import serializers
+from ..models import Comic, Chapter, User, Library, Rating, BuyList, ChapterImage, Like, Comment
 import json
 
 
@@ -208,13 +209,16 @@ def chapter_details(request, comic_id, chapter_id):
     except Like.DoesNotExist:
         ...
 
+    comments = Comment.objects.filter(chapter=chapter)
+
     context = {
         'chapter': chapter,
         'images': images,
         'prev_chapter': prev_chapter,
         'next_chapter': next_chapter,
         'chapter_list': chapter_list,
-        'like': like
+        'like': like,
+        'comments': comments
     }
 
     return render(request, 'comics/chapter.html', context)
@@ -237,3 +241,38 @@ def like_chapter(request, chapter_id):
         chapter.save()
 
         return HttpResponse(chapter.likes, status=200)
+
+
+@login_required(login_url='/login/')
+def add_comment(request, chapter_id):
+    if request.method == 'POST':
+        user_id = request.user.id
+        try:
+            chapter = Chapter.objects.get(pk=chapter_id)
+        except Chapter.DoesNotExist:
+            return Http404("Chapter does not exist")
+
+        reply_id = request.POST.get('reply_to')
+        body = request.POST.get('comment')
+
+        if reply_id:
+            comment = Comment.objects.create(user_id=user_id, chapter=chapter, reply_id=reply_id, body=body)
+        else:
+            comment = Comment.objects.create(user_id=user_id, chapter=chapter, body=body)
+
+        return HttpResponse(status=200)
+
+
+@login_required(login_url='/login/')
+def delete_comment(request, comment_id):
+    if request.method == 'POST':
+
+        try:
+            comment = Comment.objects.get(pk=comment_id)
+        except Comment.DoesNotExist:
+            return Http404("Comment does not exist")
+        if comment.user_id == request.user.id:
+            comment.delete()
+            return HttpResponse(status=200)
+
+        return HttpResponse(status=403)

@@ -15,6 +15,11 @@ urlpatterns = [
         path('save_bookmark/<int:comic_id>', views.add_bookmark, name='add_bookmark'),
     ])),
 
+    path('comments/', include([
+        path('add/<int:chapter_id>', views.add_comment, name='add_comment'),
+        path('delete/<int:comment_id>', views.delete_comment, name='delete_comment'),
+    ])),
+
     path('users/', include([
         path('<int:user_id>/', views.user_details, name='user_detail'),
         path('profile/', views.profile, name='profile'),
