@@ -23,6 +23,12 @@
 						<i class="fa-regular fa-circle-user fs-3"></i>
 					</a>
 					<ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+						<li>
+							<a href="{% url 'comics:buy_coins' %}" class="dropdown-item">
+								{{ user.coins }}
+								<i class="fas fa-coins"></i>
+							</a>
+						</li>
 						<li><a class="dropdown-item" href="{% url 'comics:profile' %}">Profile</a></li>
 						<li><a class="dropdown-item" href="{% url 'comics:settings' %}">Settings</a></li>
 						<li>
@@ -38,7 +44,7 @@
 							Sign in
 						</button>
 					</a>
-					<a href="{% url 'comics:registration' %}" class="text-decoration-none">
+					<a href="{% url 'comics:signup' %}" class="text-decoration-none">
 						<button type="button" class="btn btn-warning">
 							Sign up
 						</button>
