@@ -14,3 +14,5 @@ admin.site.register(Comment)
 admin.site.register(Market)
 admin.site.register(Library)
 admin.site.register(Rating)
+admin.site.register(Like)
+a
