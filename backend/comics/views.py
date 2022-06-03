@@ -1,12 +1,9 @@
 from django.shortcuts import render, HttpResponse, Http404, redirect
 from django.http import HttpRequest
-from django.urls import reverse_lazy
-
 from django.contrib.auth.decorators import login_required
-from django.views.generic.edit import CreateView
 
-from ..forms import UserForm
-from ..models import Comic, Chapter, User, Library, Rating, BuyList, ChapterImage, Like, Comment
+from .forms import UserForm
+from .models import Comic, Chapter, User, Library, Rating, BuyList, ChapterImage, Like, Comment
 import json
 
 
