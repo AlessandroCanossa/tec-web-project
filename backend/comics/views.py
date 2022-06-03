@@ -218,6 +218,11 @@ def buy_chapter(request, chapter_id):
 @login_required(login_url='comics:login')
 def chapter_details(request, comic_id, chapter_id):
     try:
+        buy_list = BuyList.objects.get(user_id=request.user.id, chapter_id=chapter_id)
+    except BuyList.DoesNotExist:
+        return redirect('comics:comic_detail', comic_id)
+
+    try:
         chapter = Chapter.objects.get(comic_id=comic_id, chapter_num=chapter_id)
     except Chapter.DoesNotExist:
         return Http404("Chapter does not exist")
