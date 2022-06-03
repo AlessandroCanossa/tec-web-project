@@ -1,0 +1,51 @@
+{% extends 'comics/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block head %}
+	<title>Signup</title>
+	<link rel="stylesheet" href="{% static 'comics/css/signup.css' %} ">
+{% endblock %}
+
+{% block main %}
+
+	<div class="container d-flex flex-column w-50 mt-5">
+		<h2>Register</h2>
+
+
+		<form method="post">
+			{% csrf_token %}
+			<div class="form-floating my-2">
+				{% render_field form.username class+="form-control" placeholder="Username" %}
+				<label for="id_username">Username</label>
+				{{ form.errors.username }}
+			</div>
+			<div class="form-floating my-2">
+				{% render_field form.email class+="form-control" placeholder="Email" %}
+				<label for="id_email">Email</label>
+				{{ form.errors.email }}
+			</div>
+			<div class="form-floating my-2">
+				{% render_field form.first_name class+="form-control" placeholder="First Name" %}
+				<label for="id_first_name">First Name</label>
+				{{ form.errors.first_name }}
+			</div>
+			<div class="form-floating my-2">
+				{% render_field form.last_name class+="form-control" placeholder="Last Name" %}
+				<label for="id_last_name">Last Name</label>
+				{{ form.errors.last_name }}
+			</div>
+			<div class="form-floating my-2">
+				{% render_field form.password1 class+="form-control" placeholder="Password" %}
+				<label for="id_password1">Password</label>
+				{{ form.errors.password1 }}
+			</div>
+			<div class="form-floating my-2">
+				{% render_field form.password2 class+="form-control" placeholder="Repeat password" %}
+				<label for="id_password2">Repeat Password</label>
+				{{ form.errors.password2 }}
+			</div>
+			<button class="w-100 btn btn-lg btn-primary" type="submit">Create account</button>
+		</form>
+	</div>
+{% endblock %}

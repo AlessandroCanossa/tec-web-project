@@ -11,6 +11,7 @@ pillow = "*"
 django-dynamic-image = "*"
 django-filter = "*"
 fontawesomefree = "*"
+django-widget-tweaks = "*"
 
 [dev-packages]
 

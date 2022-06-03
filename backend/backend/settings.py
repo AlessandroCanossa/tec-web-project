@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'comics',
     'django_filters',
-    'fontawesomefree'
+    'fontawesomefree',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
@@ -123,3 +124,6 @@ MEDIA_ROOT = BASE_DIR.joinpath(MEDIA_URL)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'comics.User'
+
+LOGIN_REDIRECT_URL = 'comics:index'
+LOGOUT_REDIRECT_URL = "comics:index"

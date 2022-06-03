@@ -1,7 +1,11 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, HttpResponse, Http404
+from django.shortcuts import render, HttpResponse, Http404, redirect
 from django.http import HttpRequest
-from django.core import serializers
+from django.urls import reverse_lazy
+
+from django.contrib.auth.decorators import login_required
+from django.views.generic.edit import CreateView
+
+from ..forms import UserForm
 from ..models import Comic, Chapter, User, Library, Rating, BuyList, ChapterImage, Like, Comment
 import json
 
@@ -92,7 +96,7 @@ def comic_details(request, comic_id) -> HttpResponse:
     return render(request, 'comics/comic.html', context)
 
 
-@login_required(login_url='/login/')
+@login_required(login_url='comics:login')
 def add_bookmark(request: HttpRequest, comic_id: int) -> HttpResponse:
     if request.method == 'POST':
         user_id = request.user.id
@@ -112,7 +116,7 @@ def add_bookmark(request: HttpRequest, comic_id: int) -> HttpResponse:
     return HttpResponse(status=403)
 
 
-@login_required(login_url='/login/')
+@login_required(login_url='comics:login')
 def add_rating(request, comic_id, rating) -> HttpResponse:
     if request.method == 'POST':
         user_id = request.user.id
@@ -152,15 +156,27 @@ def add_rating(request, comic_id, rating) -> HttpResponse:
     return HttpResponse(status=403)
 
 
-def login(request):
-    ...
+def register(request):
+    if request.method == 'GET':
+        form = UserForm()
+        context = {
+            'form': form
+        }
+        return render(request, 'registration/signup.html', context)
+
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('comics:login')
+        else:
+            context = {
+                'form': form,
+            }
+            return render(request, 'registration/signup.html', context)
 
 
-def registration(request):
-    ...
-
-
-@login_required(login_url='/login/')
+@login_required(login_url='comics:login')
 def profile(request):
     ...
 
@@ -169,22 +185,22 @@ def user_details(request, user_id):
     ...
 
 
-@login_required(login_url='/login/')
+@login_required(login_url='comics:login')
 def settings(request):
     ...
 
 
-@login_required(login_url='/login/')
+@login_required(login_url='comics:login')
 def logout(request):
     ...
 
 
-@login_required(login_url='/login/')
+@login_required(login_url='comics:login')
 def buy_chapter(request, chapter_id):
     ...
 
 
-@login_required(login_url='/login/')
+@login_required(login_url='comics:login')
 def chapter_details(request, comic_id, chapter_id):
     try:
         chapter = Chapter.objects.get(comic_id=comic_id, chapter_num=chapter_id)
@@ -224,7 +240,7 @@ def chapter_details(request, comic_id, chapter_id):
     return render(request, 'comics/chapter.html', context)
 
 
-@login_required(login_url='/login/')
+@login_required(login_url='comics:login')
 def like_chapter(request, chapter_id):
     if request.method == 'POST':
         user_id = request.user.id
@@ -243,7 +259,7 @@ def like_chapter(request, chapter_id):
         return HttpResponse(chapter.likes, status=200)
 
 
-@login_required(login_url='/login/')
+@login_required(login_url='comics:login')
 def add_comment(request, chapter_id):
     if request.method == 'POST':
         user_id = request.user.id
@@ -263,7 +279,7 @@ def add_comment(request, chapter_id):
         return HttpResponse(status=200)
 
 
-@login_required(login_url='/login/')
+@login_required(login_url='comics:login')
 def delete_comment(request, comment_id):
     if request.method == 'POST':
 

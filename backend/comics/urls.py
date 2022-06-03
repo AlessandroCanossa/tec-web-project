@@ -20,12 +20,13 @@ urlpatterns = [
         path('delete/<int:comment_id>', views.delete_comment, name='delete_comment'),
     ])),
 
-    path('users/', include([
+    path('account/', include('django.contrib.auth.urls')),
+    path('signup/', views.register, name='signup'),
+
+    path('user/', include([
         path('<int:user_id>/', views.user_details, name='user_detail'),
         path('profile/', views.profile, name='profile'),
         path('settings/', views.settings, name='settings'),
-        path('signout/', views.logout, name='logout'),
-        path('login/', views.login, name='login'),
-        path('registration/', views.registration, name='registration'),
+        # path('signout/', views.logout, name='logout'),
     ])),
 ]
