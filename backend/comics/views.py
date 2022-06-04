@@ -3,7 +3,7 @@ from django.http import HttpRequest
 from django.contrib.auth.decorators import login_required
 
 from .forms import UserForm
-from .models import Comic, Chapter, User, Library, Rating, BuyList, ChapterImage, Like, Comment
+from .models import Comic, Chapter, User, Library, Rating, BuyList, ChapterImage, Like, Comment, CoinsPurchase
 import json
 
 
@@ -218,7 +218,7 @@ def buy_chapter(request, chapter_id):
 @login_required(login_url='comics:login')
 def chapter_details(request, comic_id, chapter_id):
     try:
-        buy_list = BuyList.objects.get(user_id=request.user.id, chapter_id=chapter_id)
+        buy_list = BuyList.objects.get(user_id=request.user.id, chapter__comic_id=comic_id, chapter__chapter_num=chapter_id)
     except BuyList.DoesNotExist:
         return redirect('comics:comic_detail', comic_id)
 
@@ -302,7 +302,6 @@ def add_comment(request, chapter_id):
 @login_required(login_url='comics:login')
 def delete_comment(request, comment_id):
     if request.method == 'POST':
-
         try:
             comment = Comment.objects.get(pk=comment_id)
         except Comment.DoesNotExist:
@@ -312,3 +311,23 @@ def delete_comment(request, comment_id):
             return HttpResponse(status=200)
 
         return HttpResponse(status=403)
+
+
+@login_required(login_url='comics:login')
+def market(request):
+    if request.method == 'POST':
+        user = User.objects.get(pk=request.user.id)
+        try:
+            amount = int(request.POST.get('coins_amount'))
+        except ValueError:
+            message = 'Insert a valid amount of coins'
+            return HttpResponse(message, status=400)
+        purchase = CoinsPurchase.objects.create(user=user, coins=amount)
+        user.coins += amount
+        user.save()
+
+        message = f"Successfully purchased {amount} coins"
+
+        return HttpResponse(message, status=200)
+    else:
+        return render(request, 'comics/market.html')

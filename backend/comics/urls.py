@@ -27,7 +27,7 @@ urlpatterns = [
         path('<int:user_id>/', views.user_details, name='user_detail'),
         path('profile/', views.profile, name='profile'),
         path('settings/', views.settings, name='settings'),
-        path('buy_coins/', views.settings, name='buy_coins'),
+        path('buy_coins/', views.market, name='buy_coins'),
         # path('signout/', views.logout, name='logout'),
     ])),
 ]

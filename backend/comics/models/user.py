@@ -42,7 +42,7 @@ class Comment(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     body = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
-    reply = models.ForeignKey(to='Comment', on_delete=models.CASCADE, blank=True, null=True, related_name='reply_to')
+    reply = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, related_name='reply_to')
 
     def __str__(self):
         return f'Comment {self.body} by {self.user.username}'
@@ -56,12 +56,12 @@ class Library(models.Model):
         return f'{self.user.username} - {self.comic.title}'
 
 
-class Market(models.Model):
-    cost = models.FloatField(help_text='Cost in euros')
-    coins = models.PositiveIntegerField()
-
-    def __str__(self):
-        return f'{self.cost}€ = {self.coins} coins'
+# class Market(models.Model):
+#     cost = models.FloatField(help_text='Cost in euros')
+#     coins = models.PositiveIntegerField()
+#
+#     def __str__(self):
+#         return f'{self.cost}€ = {self.coins} coins'
 
 
 class Rating(models.Model):
@@ -83,3 +83,12 @@ class Like(models.Model):
 
     def __str__(self):
         return f'{self.user.username} - {self.chapter.comic.title} - {self.chapter.chapter_num}'
+
+
+class CoinsPurchase(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    coins = models.PositiveIntegerField()
+    date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user.username} - {self.coins} coins - {self.date}'
