@@ -340,7 +340,7 @@ def market(request):
         except ValueError:
             message = 'Insert a valid amount of coins'
             return HttpResponse(message, status=400)
-        purchase = user.coinspurchase_set.create(amount=amount)
+        purchase = user.coinspurchase_set.create(coins=amount)
         user.coins += amount
         user.save()
 
