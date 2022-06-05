@@ -1,0 +1,96 @@
+{% extends 'comics/base.html' %}
+{% load static %}
+
+{% block head %}
+	<title>User settings</title>
+{% endblock %}
+
+{% block main %}
+	<div class="container d-flex flex-column align-items-center mt-5">
+		<ul class="nav nav-pills justify-content-between w-50" id="myTab" role="tablist">
+			<li class="nav-item" role="presentation">
+				<button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#library-tab-pane"
+				        type="button" role="tab" aria-controls="library-tab-pane" aria-selected="true">
+					Library
+				</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="comments-tab" data-bs-toggle="tab" data-bs-target="#comments-tab-pane"
+				        type="button" role="tab" aria-controls="comments-tab-pane" aria-selected="false">
+					Comments
+				</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history-tab-pane"
+				        type="button" role="tab" aria-controls="history-tab-pane" aria-selected="false">
+					History
+				</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="buylist-tab" data-bs-toggle="tab" data-bs-target="#buylist-tab-pane"
+				        type="button" role="tab" aria-controls="buylist-tab-pane" aria-selected="false">
+					Buy list
+				</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings-tab-pane"
+				        type="button" role="tab" aria-controls="settings-tab-pane" aria-selected="false">
+					Settings
+				</button>
+		</ul>
+		<div class="tab-content container mt-3" id="myTabContent">
+			<div class="tab-pane fade show active" id="library-tab-pane" role="tabpanel" aria-labelledby="library-tab"
+			     tabindex="0">
+				{#				<h3></h3>#}
+				<ul class="container w-75">
+					{% for entry in lib_comics %}
+						<li class="card">
+							<div class="card-body d-flex flex-row justify-content-between">
+								<div class="d-flex flex-row">
+									<img src="/media/{{ entry.comic.cover }}" alt="{{ entry.comic.title }}" width="69"
+									     height="100"/>
+									<h3 class="ms-2 align-self-center">{{ entry.comic.title }}</h3>
+								</div>
+								<div class="align-self-center">
+									<a href="{% url 'comics:comic_detail' comic_id=entry.comic_id %}"
+									   class="btn btn-dark me-1">
+										View
+									</a>
+									{% csrf_token %}
+									<button onclick="removeBookmark({{ entry.comic_id }})"
+									        class="btn btn-outline-danger">Remove
+									</button>
+								</div>
+							</div>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+			<div class="tab-pane fade" id="comments-tab-pane" role="tabpanel" aria-labelledby="comments-tab"
+			     tabindex="0">
+				{% for comment in comments %}
+					{{ comment.body }}
+				{% endfor %}
+			</div>
+			<div class="tab-pane fade" id="history-tab-pane" role="tabpanel" aria-labelledby="history-tab" tabindex="0">
+				{% for entry in history %}
+					{{ entry }}
+				{% endfor %}
+			</div>
+			<div class="tab-pane fade" id="buylist-tab-pane" role="tabpanel" aria-labelledby="buylist-tab"
+			     tabindex="0">
+				{% for entry in buy_list %}
+					{{ entry }}
+				{% endfor %}
+			</div>
+			<div class="tab-pane fade" id="settings-tab-pane" role="tabpanel" aria-labelledby="settings-tab"
+			     tabindex="0">
+				{{ settings_form }}
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascript %}
+	<script src="{% static 'comics/js/bookmark.js' %}" type="text/javascript"></script>
+{% endblock %}

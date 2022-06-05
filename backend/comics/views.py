@@ -174,8 +174,30 @@ def register(request: HttpRequest) -> HttpResponse:
 
 
 @login_required(login_url='comics:login')
-def settings(request):
-    ...
+def settings(request: HttpRequest) -> HttpResponse:
+    user = User.objects.get(pk=request.user.id)
+
+    if request.method == 'GET':
+        library = user.library_set.all()
+        # Comic.objects.filter(library__in=library)
+
+        comments = user.comment_set.order_by('-created_on')
+
+        history = user.readhistory_set.order_by('-date')
+
+        buy_list = user.buylist_set.order_by('-date')
+
+        settings_form = None
+
+        context = {
+            'lib_comics': library,
+            'comments': comments,
+            'history': history,
+            'buy_list': buy_list,
+            'settings_form': settings_form
+        }
+
+        return render(request, 'comics/settings.html', context)
 
 
 @login_required(login_url='comics:login')
