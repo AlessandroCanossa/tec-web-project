@@ -4,23 +4,39 @@ import json
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, Http404, HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 from .forms import UserForm
 from .models import Comic, Chapter, User, Library, Rating, BuyList, ChapterImage, Like, Comment, CoinsPurchase, ReadHistory
 
 
 def index(request: HttpRequest) -> HttpResponse:
-    latest_chapters = Chapter.objects.order_by('-pub_date')[:10]
-    latest_chapters = tuple(latest_chapters)
+    latest_chapters = Chapter.objects.order_by('-pub_date')
+    # latest_chapters = set(latest_chapters)
+    paginator = Paginator(latest_chapters, 10)
     latest_updates = []
 
-    for chapter in latest_chapters:
+    try:
+        page = int(request.GET.get('page'))
+    except (ValueError, TypeError):
+        page = 1
+
+    for chapter in paginator.get_page(page).object_list:
         comic = Comic.objects.get(pk=chapter.comic.id)
         latest_updates.append(comic)
 
     latest_updates = set(latest_updates)
+
+    prev_page = page - 1 if page > 1 else None
+    next_page = page + 1 if page < paginator.num_pages else None
+
     context = {
-        'latest_updates': latest_updates
+        'latest_updates': latest_updates,
+        'pages': range(1, paginator.num_pages + 1),
+        'current_page': page,
+        'next_page': next_page,
+        'prev_page': prev_page,
+        'max_pages': paginator.num_pages
     }
 
     return render(request, 'comics/index.html', context)
@@ -321,9 +337,9 @@ def add_comment(request: HttpRequest, chapter_id: int) -> HttpResponse | Http404
         body = request.POST.get('comment')
 
         if reply_id:
-            comment = user.comment_set.create(chapter=chapter, body=body, reply_to=reply_id)
+            user.comment_set.create(chapter=chapter, body=body, reply_to=reply_id)
         else:
-            comment = user.comment_set.create(chapter=chapter, body=body)
+            user.comment_set.create(chapter=chapter, body=body)
 
         return HttpResponse(status=200)
 
@@ -351,7 +367,7 @@ def market(request: HttpRequest) -> HttpResponse:
         except ValueError:
             message = 'Insert a valid amount of coins'
             return HttpResponse(message, status=400)
-        purchase = user.coinspurchase_set.create(coins=amount)
+        user.coinspurchase_set.create(coins=amount)
         user.coins += amount
         user.save()
 

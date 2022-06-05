@@ -8,7 +8,7 @@
 .card_list {
   gap: 50px 72px;
   width: 100%;
-  height: 865px;
+  /*height: 865px;*/
   display: flex;
   padding: 0 100px;
   flex-wrap: wrap;
