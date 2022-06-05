@@ -1,4 +1,5 @@
 {% extends 'comics/base.html' %}
+{% load static %}
 
 {% block head %}
 	<title>{{ chapter.comic.title }} - Chapter {{ chapter.chapter_num }}</title>
@@ -30,20 +31,23 @@
 			</div>
 
 		</div>
-		<form id="likeForm">
-			{% csrf_token %}
-			<button class="btn btn-dark" id="likeBtn">
-			<span>
-				{{ chapter.likes }}
-			</span>
-
-				{% if like %}
-					<i id="heartIcon" class="fa-solid fa-heart"></i>
-				{% else %}
-					<i id="heartIcon" class="fa-regular fa-heart"></i>
-				{% endif %}
+		{% csrf_token %}
+		{% if like %}
+			<button class="btn btn-dark" id="likeBtn" onclick="removeLike({{ chapter.id }})">
+				<span>
+					{{ chapter.likes }}
+				</span>
+				<i id="heartIcon" class="fas fa-heart"></i>
 			</button>
-		</form>
+		{% else %}
+			<button class="btn btn-dark" id="likeBtn" onclick="addLike({{ chapter.id }})">
+				<span>
+					{{ chapter.likes }}
+				</span>
+				<i id="heartIcon" class="far fa-heart"></i>
+			</button>
+		{% endif %}
+
 		<div class="d-flex flex-row">
 			{% if prev_chapter != None %}
 				<a href="{% url 'comics:chapter_detail' comic_id=chapter.comic_id chapter_id=prev_chapter %}">
@@ -80,8 +84,6 @@
 			<img src="/media/{{ image.image }}" alt="Chapter-{{ chapter.chapter_num }}"/>
 		{% endfor %}
 	</div>
-
-	{# TODO: aggiungere sezione commenti #}
 
 	<div id="commentSection" class="container-fluid w-75 mt-5">
 		<h3>Comments</h3>
@@ -161,24 +163,8 @@
 
 
 {% block javascript %}
+	<script src="{% static 'comics/js/like.js' %}" type="text/javascript"></script>
 	<script>
-      $("#likeForm").submit((e) => {
-        e.preventDefault();
-        $.ajax({
-          url: "{% url 'comics:like_chapter' chapter_id=chapter.id %}",
-          type: 'POST',
-          headers: {
-            'X-CSRFToken': csrftoken
-          },
-          success: (data) => {
-            const likeInnerNodes = $("#likeBtn").children();
-            likeInnerNodes[0].innerHTML = data;
-            likeInnerNodes[1].classList.toggle("fa-solid");
-            likeInnerNodes[1].classList.toggle("fa-regular");
-          }
-        });
-      });
-
 
       $('#commentForm').submit((e) => {
         e.preventDefault();
