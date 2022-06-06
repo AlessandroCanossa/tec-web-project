@@ -29,7 +29,6 @@ class Comic(models.Model):
     rating = models.FloatField(default=0)
     status = models.CharField(choices=STATUS, default=ONGOING, max_length=1)
     summary = models.TextField()
-    thumbnail = DynamicImageField()
     cover = DynamicImageField()
 
     def __str__(self):
@@ -40,9 +39,12 @@ class Comic(models.Model):
         instance_name = self.title.lower().replace(' ', '-')
         return f'{class_name}/{instance_name}'
 
+    def delete(self, using=None, keep_parents=False):
+        self.cover.delete()
+        super().delete(using, keep_parents)
+
 
 class Chapter(models.Model):
-    # title = models.CharField(max_length=255)
     chapter_num = models.PositiveIntegerField()
     comic = models.ForeignKey(to=Comic, on_delete=models.CASCADE)
     pub_date = models.DateTimeField(auto_now_add=True)
@@ -68,3 +70,7 @@ class ChapterImage(models.Model):
         chapter_name = self.chapter.chapter_num
         comic_name = self.chapter.comic.title.lower().replace(' ', '-')
         return f'chapter/{comic_name}/{chapter_name}'
+
+    def delete(self, using=None, keep_parents=False):
+        self.image.delete()
+        super().delete(using, keep_parents)
