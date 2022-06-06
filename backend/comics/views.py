@@ -452,3 +452,26 @@ def delete_comic(request: HttpRequest, comic_id: int) -> HttpResponse:
 
         comic.delete()
         return HttpResponse('Comic deleted successfully', status=200)
+
+
+@login_required(login_url='comics:login')
+def delete_chapter(request: HttpRequest, chapter_id: int) -> HttpResponse:
+    if request.method == 'DELETE':
+        user = User.objects.get(pk=request.user.id)
+        chapter = Chapter.objects.get(pk=chapter_id)
+
+        if chapter.comic.creator_id != user.id:
+            return HttpResponse('You cannot delete this chapter', status=403)
+
+        chapter.delete()
+        return HttpResponse('Chapter deleted successfully', status=200)
+
+
+@login_required(login_url='comics:login')
+def new_comic(request):
+    return None
+
+
+@login_required(login_url='comics:login')
+def new_chapter(request):
+    return None

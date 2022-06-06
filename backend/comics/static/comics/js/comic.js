@@ -29,3 +29,20 @@ $('#buyForm').submit((e) => {
     }
   })
 })
+
+const deleteChapter = (chapter_id) => {
+  $.ajax({
+    url: `/comics/delete_chapter/${chapter_id}/`,
+    type: 'DELETE',
+    headers: {
+      'X-CSRFToken': csrftoken
+    },
+    success: (data) => {
+      alert(data);
+      location.reload();
+    },
+    error: (xhr, _ajaxOptions, _thrownError) => {
+      alert(xhr.responseText);
+    }
+  })
+}

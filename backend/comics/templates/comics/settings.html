@@ -214,6 +214,10 @@
 										</span>
 									</div>
 									<div class="">
+										<a href="{% url 'comics:comic_detail' comic_id=comic.id %}"
+										   class="btn btn-dark me-1">
+											View
+										</a>
 										<a class='btn btn-success'
 										   href="{% url 'comics:add_new_chapter' comic_id=comic.id %}">
 											Add chapter

@@ -130,7 +130,17 @@
 			{% for chapter in chapters %}
 
 				<li id="chapter_{{ chapter.chapter_num }}" class="list-group-item d-flex bg-dark mb-2 w-100">
-					{% if buy_list and chapter.id in buy_list %}
+					{% if user.id == comic.creator_id %}
+						<a href="{% url 'comics:chapter_detail' comic_id=comic.id chapter_id=chapter.chapter_num %}"
+						   class="text-white text-decoration-none w-100 d-flex align-items-center justify-content-center">
+							<div class="w-auto invisible">
+								<i class="fa-solid fa-coins"></i>
+								<span class="">{{ chapter.cost }}</span>
+							</div>
+							<span class="">Chapter {{ chapter.chapter_num }}</span>
+						</a>
+						<button class="btn btn-danger" onclick="deleteChapter({{ chapter.id }})">Delete</button>
+					{% elif buy_list and chapter.id in buy_list %}
 						<a href="{% url 'comics:chapter_detail' comic_id=comic.id chapter_id=chapter.chapter_num %}"
 						   class="text-white text-decoration-none w-100 d-flex align-items-center justify-content-between">
 							<div class="w-auto invisible">
