@@ -1,6 +1,7 @@
 from datetime import datetime
 import json
 
+from django.db import IntegrityError
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, Http404, HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -195,7 +196,6 @@ def settings(request: HttpRequest) -> HttpResponse:
 
     if request.method == 'GET':
         library = user.library_set.all()
-        # Comic.objects.filter(library__in=library)
 
         comments = user.comment_set.order_by('-created_on')
 
@@ -203,14 +203,14 @@ def settings(request: HttpRequest) -> HttpResponse:
 
         buy_list = user.buylist_set.order_by('-date')
 
-        settings_form = None
+        my_comics = user.comic_set.all()
 
         context = {
             'lib_comics': library,
             'comments': comments,
             'history': history,
             'buy_list': buy_list,
-            'settings_form': settings_form
+            'my_comics': my_comics
         }
 
         return render(request, 'comics/settings.html', context)
@@ -386,3 +386,55 @@ def delete_history_entry(request: HttpRequest, entry_id: int) -> HttpResponse:
         user = User.objects.get(pk=request.user.id)
         user.readhistory_set.get(pk=entry_id).delete()
         return HttpResponse(status=200)
+
+
+@login_required(login_url='comics:login')
+def change_username(request: HttpRequest) -> HttpResponse:
+    if request.method == 'POST':
+        user = User.objects.get(pk=request.user.id)
+        try:
+            new_username = request.POST.get('username')
+            print(new_username)
+            if new_username:
+                user.username = new_username
+                user.save()
+            else:
+                return HttpResponse('Invalid username', status=400)
+        except IntegrityError:
+            return HttpResponse('Username already taken', status=400)
+
+        return HttpResponse('Username changed successfully', status=200)
+
+
+@login_required(login_url='comics:login')
+def change_password(request: HttpRequest) -> HttpResponse:
+    if request.method == 'POST':
+        user = User.objects.get(pk=request.user.id)
+        old_password: str = request.POST.get('old_password')
+        new_password: str = request.POST.get('new_password')
+        confirm_password: str = request.POST.get('confirm_password')
+
+        print(old_password, new_password, confirm_password)
+
+        if not user.check_password(old_password):
+            return HttpResponse('Invalid old password', status=400)
+
+        if new_password != confirm_password:
+            return HttpResponse('Passwords do not match', status=400)
+
+        if new_password == old_password:
+            return HttpResponse('New password must be different from old password', status=400)
+
+        user.set_password(new_password)
+        user.save()
+
+        return HttpResponse('Password changed successfully', status=200)
+
+
+@login_required(login_url='comics:login')
+def become_creator(request) -> HttpResponse:
+    if request.method == 'POST':
+        user = User.objects.get(pk=request.user.id)
+        user.is_creator = True
+        user.save()
+        return HttpResponse('You are now a creator', status=200)

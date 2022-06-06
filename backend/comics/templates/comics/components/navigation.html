@@ -24,6 +24,11 @@
 						<i class="fa-regular fa-circle-user fs-3"></i>
 					</a>
 					<ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+						{% if user.is_creator %}
+							<li>
+								<span class="dropdown-item-text">Creator</span>
+							</li>
+						{% endif %}
 						<li>
 							<a href="{% url 'comics:buy_coins' %}" class="dropdown-item">
 								{{ user.coins }}

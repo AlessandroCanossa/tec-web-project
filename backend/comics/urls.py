@@ -27,5 +27,8 @@ urlpatterns = [
         path('settings/', views.settings, name='settings'),
         path('buy_coins/', views.market, name='buy_coins'),
         path('delete_history_entry/<int:entry_id>', views.delete_history_entry, name='delete_history_entry'),
+        path('change_username/', views.change_username, name='change_username'),
+        path('change_password/', views.change_password, name='change_password'),
+        path('become_creator/', views.become_creator, name='become_creator'),
     ])),
 ]
