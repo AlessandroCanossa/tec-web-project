@@ -13,6 +13,10 @@ urlpatterns = [
         path('buy_chapter/<int:chapter_id>', views.buy_chapter, name='buy_chapter'),
         path('rate_comic/<int:comic_id>/<int:rating>', views.rate_comic, name='rate_comic'),
         path('toggle_bookmark/<int:comic_id>', views.bookmark_comic, name='toggle_bookmark'),
+
+        path('add_new_comic/', views.comics_list, name='add_new_comic'),
+        path('<int:comic_id>/new_chapter', views.comics_list, name='add_new_chapter'),
+        path('<int:comic_id>/delete/', views.delete_comic, name='delete_comic'),
     ])),
 
     path('comments/', include([

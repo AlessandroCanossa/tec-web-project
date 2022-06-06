@@ -432,9 +432,23 @@ def change_password(request: HttpRequest) -> HttpResponse:
 
 
 @login_required(login_url='comics:login')
-def become_creator(request) -> HttpResponse:
+def become_creator(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
         user = User.objects.get(pk=request.user.id)
         user.is_creator = True
         user.save()
         return HttpResponse('You are now a creator', status=200)
+
+
+@login_required(login_url='comics:login')
+def delete_comic(request: HttpRequest, comic_id: int) -> HttpResponse:
+    if request.method == 'DELETE':
+        user = User.objects.get(pk=request.user.id)
+
+        try:
+            comic = user.comic_set.get(pk=comic_id)
+        except Comic.DoesNotExist:
+            return HttpResponse('You cannot delete this comic', status=403)
+
+        comic.delete()
+        return HttpResponse('Comic deleted successfully', status=200)
