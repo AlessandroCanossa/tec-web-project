@@ -26,5 +26,6 @@ urlpatterns = [
     path('user/', include([
         path('settings/', views.settings, name='settings'),
         path('buy_coins/', views.market, name='buy_coins'),
+        path('delete_history_entry/<int:entry_id>', views.delete_history_entry, name='delete_history_entry'),
     ])),
 ]

@@ -68,14 +68,51 @@
 			</div>
 			<div class="tab-pane fade" id="comments-tab-pane" role="tabpanel" aria-labelledby="comments-tab"
 			     tabindex="0">
-				{% for comment in comments %}
-					{{ comment.body }}
-				{% endfor %}
+				<ul class="container  w-75">
+					{% for comment in comments %}
+						<li class="card mb-3" id="comment_{{ comment.id }}">
+							<div class='card-body'>
+								<div class='d-flex flex-row align-items-end'>
+									<h5 class='card-title mb-0 me-2'>{{ comment.user.username }}</h5>
+									<span class='card-subtitle'> - {{ comment.created_on }}</span>
+									{% if comment.reply %}
+										<span class='card-subtitle ms-2'>
+											reply to
+											<i class="fas fa-arrow-right"></i>
+											{{ comment.reply.user.username }}</span>
+									{% endif %}
+								</div>
+								<div class="position-absolute" style="right: 1rem; top: 1rem">
+									<a class='btn btn-outline-dark'
+									   onclick='deleteComment({{ comment.id }})'>
+										<i class="fas fa-xmark"></i>
+									</a>
+								</div>
+								<div class='card-text'>{{ comment.body }}</div>
+							</div>
+						</li>
+					{% endfor %}
+				</ul>
 			</div>
 			<div class="tab-pane fade" id="history-tab-pane" role="tabpanel" aria-labelledby="history-tab" tabindex="0">
-				{% for entry in history %}
-					{{ entry }}
-				{% endfor %}
+				<ul class="container  w-75">
+					{% for entry in history %}
+						<li class="card mb-3" id="history_entry_{{ entry.id }}">
+							<div class='card-body d-flex flex-row justify-content-between align-items-center    '>
+								<div class='d-flex flex-row align-items-end'>
+									<h5 class='card-title mb-0 me-2'>{{ entry.chapter }}</h5>
+									<span class='card-subtitle'> - {{ entry.date }}</span>
+								</div>
+								<div class="">
+									<a class='btn btn-outline-dark'
+									   onclick='deleteHistoryEntry({{ entry.id }})'>
+										<i class="fas fa-xmark"></i>
+									</a>
+								</div>
+							</div>
+						</li>
+					{% endfor %}
+				</ul>
 			</div>
 			<div class="tab-pane fade" id="buylist-tab-pane" role="tabpanel" aria-labelledby="buylist-tab"
 			     tabindex="0">
@@ -93,4 +130,6 @@
 
 {% block javascript %}
 	<script src="{% static 'comics/js/bookmark.js' %}" type="text/javascript"></script>
+	<script src="{% static 'comics/js/comment.js' %}" type="text/javascript"></script>
+	<script src="{% static 'comics/js/history.js' %}" type="text/javascript"></script>
 {% endblock %}

@@ -337,7 +337,7 @@ def add_comment(request: HttpRequest, chapter_id: int) -> HttpResponse | Http404
         body = request.POST.get('comment')
 
         if reply_id:
-            user.comment_set.create(chapter=chapter, body=body, reply_to=reply_id)
+            user.comment_set.create(chapter=chapter, body=body, reply_id=reply_id)
         else:
             user.comment_set.create(chapter=chapter, body=body)
 
@@ -346,7 +346,7 @@ def add_comment(request: HttpRequest, chapter_id: int) -> HttpResponse | Http404
 
 @login_required(login_url='comics:login')
 def delete_comment(request: HttpRequest, comment_id: int) -> HttpResponse | Http404:
-    if request.method == 'POST':
+    if request.method == 'DELETE':
         try:
             comment = Comment.objects.get(pk=comment_id)
         except Comment.DoesNotExist:
@@ -376,3 +376,11 @@ def market(request: HttpRequest) -> HttpResponse:
         return HttpResponse(message, status=200)
     else:
         return render(request, 'comics/market.html')
+
+
+@login_required(login_url='comics:login')
+def delete_history_entry(request: HttpRequest, entry_id: int) -> HttpResponse:
+    if request.method == 'DELETE':
+        user = User.objects.get(pk=request.user.id)
+        user.readhistory_set.get(pk=entry_id).delete()
+        return HttpResponse(status=200)
