@@ -50,7 +50,7 @@
 
 		<div class="d-flex flex-row">
 			{% if prev_chapter != None %}
-				<a href="{% url 'comics:chapter_detail' comic_id=chapter.comic_id chapter_id=prev_chapter %}">
+				<a href="{% url 'comics:chapter_detail' comic_id=chapter.comic_id chapter_id=prev_chapter.chapter_num %}">
 					<button class="btn btn-dark">
 						Prev
 					</button>
@@ -63,7 +63,7 @@
 				</a>
 			{% endif %}
 			{% if next_chapter != None %}
-				<a href="{% url 'comics:chapter_detail' comic_id=chapter.comic_id chapter_id=next_chapter %}"
+				<a href="{% url 'comics:chapter_detail' comic_id=chapter.comic_id chapter_id=next_chapter.chapter_num %}"
 				   class="ms-2">
 					<button class="btn btn-dark">
 						Next

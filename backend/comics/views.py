@@ -279,10 +279,12 @@ def chapter_details(request: HttpRequest, comic_id: int, chapter_id: int) -> Htt
     prev_chapter = None
     next_chapter = None
     if chapter.chapter_num > 0:
-        prev_chapter = comic.chapter_set.get(chapter_num=chapter.chapter_num - 1)
+        prev_chapter = comic.chapter_set.get(chapter_num=(chapter.chapter_num - 1))
 
     if chapter.chapter_num < chapter_list.count() - 1:
-        next_chapter = comic.chapter_set.get(chapter_num=chapter.chapter_num + 1)
+        next_chapter = comic.chapter_set.get(chapter_num=(chapter.chapter_num + 1))
+
+    print(prev_chapter, next_chapter)
 
     try:
         like = user.like_set.get(chapter=chapter)
