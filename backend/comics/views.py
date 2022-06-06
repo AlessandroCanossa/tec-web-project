@@ -1,13 +1,14 @@
 from datetime import datetime
 import json
 
+from django.contrib.auth.models import Group
 from django.db import IntegrityError
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, Http404, HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.core.paginator import Paginator
 
-from .forms import UserForm
+from .forms import UserForm, ComicForm
 from .models import Comic, Chapter, User, Library, Rating, BuyList, ChapterImage, Like, Comment, CoinsPurchase, ReadHistory
 
 
@@ -436,11 +437,13 @@ def become_creator(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
         user = User.objects.get(pk=request.user.id)
         user.is_creator = True
+        user.groups.add(Group.objects.get(name='creator'))
         user.save()
         return HttpResponse('You are now a creator', status=200)
 
 
 @login_required(login_url='comics:login')
+@permission_required('comics.delete_comic')
 def delete_comic(request: HttpRequest, comic_id: int) -> HttpResponse:
     if request.method == 'DELETE':
         user = User.objects.get(pk=request.user.id)
@@ -455,6 +458,7 @@ def delete_comic(request: HttpRequest, comic_id: int) -> HttpResponse:
 
 
 @login_required(login_url='comics:login')
+@permission_required('comics.delete_chapter')
 def delete_chapter(request: HttpRequest, chapter_id: int) -> HttpResponse:
     if request.method == 'DELETE':
         user = User.objects.get(pk=request.user.id)
@@ -468,10 +472,38 @@ def delete_chapter(request: HttpRequest, chapter_id: int) -> HttpResponse:
 
 
 @login_required(login_url='comics:login')
+@permission_required('comics.add_comic')
 def new_comic(request):
-    return None
+    user = User.objects.get(pk=request.user.id)
+
+    if not user.is_creator:
+        return HttpResponse('You are not a creator', status=403)
+
+    if request.method == 'GET':
+        form = ComicForm()
+        return render(request, 'comics/new_comic.html', {'form': form})
+
+    if request.method == 'POST':
+        form = ComicForm(request.POST, request.FILES)
+        if form.is_valid():
+            user = User.objects.get(pk=request.user.id)
+            comic = user.comic_set.create(
+                title=form.cleaned_data['title'],
+                summary=form.cleaned_data['summary'],
+                cover=form.cleaned_data['cover'],
+                creator=user
+            )
+            comic.genre.set(form.cleaned_data['genres'])
+            comic.save()
+
+            return redirect('comics:comic_detail', comic_id=comic.id)
+        else:
+            print(form.errors)
+            return render(request, 'comics/new_comic.html', {'form': form})
+    return render(request, 'comics/new_comic.html')
 
 
 @login_required(login_url='comics:login')
+@permission_required('comics.add_chapter')
 def new_chapter(request):
     return None

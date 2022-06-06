@@ -1,0 +1,18 @@
+{% extends 'comics/base.html' %}
+
+{% block head %}
+	<title>New Comic</title>
+{% endblock %}
+
+{% block main %}
+	<h1>New Comic</h1>
+	<form action="{% url 'comics:add_new_comic' %}" method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+		{{ form.as_p }}
+
+		<button type="submit" class="btn btn-dark">Add Comic</button>
+	</form>
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}
