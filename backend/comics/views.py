@@ -498,7 +498,6 @@ def new_comic(request):
 
             return redirect('comics:comic_detail', comic_id=comic.id)
         else:
-            print(form.errors)
             return render(request, 'comics/new_comic.html', {'form': form})
     return render(request, 'comics/new_comic.html')
 

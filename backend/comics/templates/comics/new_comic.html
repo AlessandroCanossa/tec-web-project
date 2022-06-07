@@ -1,17 +1,52 @@
 {% extends 'comics/base.html' %}
+{% load widget_tweaks %}
+
 
 {% block head %}
 	<title>New Comic</title>
 {% endblock %}
 
 {% block main %}
-	<h1>New Comic</h1>
-	<form action="{% url 'comics:add_new_comic' %}" method="post" enctype="multipart/form-data">
-		{% csrf_token %}
-		{{ form.as_p }}
+	<div class="container w-75 mt-5">
+		<h1>New Comic</h1>
+		<form action="{% url 'comics:add_new_comic' %}" method="post" enctype="multipart/form-data">
+			{% csrf_token %}
+			<div class="mb-3">
+				<label for="id_title" class="form-label">{{ form.title.label }}</label>
+				{% render_field form.title class+="form-control" placeholder="Title" %}
+				{{ form.title.errors }}
+			</div>
+			<div class="mb-3">
+				<label for="id_summary" class="form-label">{{ form.summary.label }}</label>
+				{% render_field form.summary class+="form-control" placeholder="Summary" %}
+				{{ form.summary.errors }}
+			</div>
 
-		<button type="submit" class="btn btn-dark">Add Comic</button>
-	</form>
+			<div class="mb-3">
+				<label class="form-label" for="id_cover">{{ form.cover.label }}</label>
+				{% render_field form.cover class+="form-control" placeholder="Cover" %}
+				{{ form.cover.errors }}
+			</div>
+
+			<div class="mb-3 dropend">
+				<button class="dropdown-toggle btn btn-secondary " type="button" id="dropdownMenuButton"
+				        data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+					{{ form.genres.label }}
+				</button>
+				<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+					{% for genre in form.genres %}
+						<li>
+							<div class="dropdown-item">
+								{{ genre }}
+							</div>
+						</li>
+					{% endfor %}
+				</ul>
+				{{ form.genres.errors }}
+			</div>
+			<button type="submit" class="btn btn-dark">Add Comic</button>
+		</form>
+	</div>
 {% endblock %}
 
 {% block javascript %}
