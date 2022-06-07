@@ -29,22 +29,17 @@ def index(request: HttpRequest) -> HttpResponse:
 
     latest_updates = set(latest_updates)
 
-    prev_page = page - 1 if page > 1 else None
-    next_page = page + 1 if page < paginator.num_pages else None
-
     context = {
         'latest_updates': latest_updates,
-        'pages': range(1, paginator.num_pages + 1),
-        'current_page': page,
-        'next_page': next_page,
-        'prev_page': prev_page,
-        'max_pages': paginator.num_pages
+        'next': paginator.get_page(page).has_next(),
+        'prev': paginator.get_page(page).has_previous(),
+        'next_page': page + 1,
+        'prev_page': page - 1,
     }
 
     return render(request, 'comics/index.html', context)
 
 
-# TODO: finish this
 def comics_list(request: HttpRequest) -> HttpResponse:
     if request.method == 'GET':
         name = request.GET.get('p')

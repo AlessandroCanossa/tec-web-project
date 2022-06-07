@@ -19,30 +19,23 @@
 	</section>
 	<nav aria-label="Page navigation example" class="">
 		<ul class="pagination justify-content-center">
-			{% if prev_page %}
+			{% if prev %}
 				<li class="page-item">
 					{% else %}
 				<li class="page-item disabled">
 			{% endif %}
 			<a class="page-link" href="/?page={{ prev_page }}" aria-label="Previous">
-				<span aria-hidden="true">&laquo;</span>
+				<span aria-hidden="true">Previous</span>
 			</a>
 			</li>
-			{% for i in pages %}
-				{% if current_page == i %}
-					<li class="page-item"><a class="page-link active">{{ i }}</a></li>
-				{% else %}
-					<li class="page-item"><a class="page-link" href="/?page={{ i }}">{{ i }}</a></li>
-				{% endif %}
-			{% endfor %}
 
-			{% if next_page %}
+			{% if next %}
 				<li class="page-item ">
 					{% else %}
 				<li class="page-item disabled">
 			{% endif %}
 			<a class="page-link" href="/?page={{ next_page }}" aria-label="Next">
-				<span aria-hidden="true">&raquo;</span>
+				<span aria-hidden="true">Next</span>
 			</a>
 			</li>
 		</ul>
