@@ -18,25 +18,9 @@ urlpatterns = [
         path('delete_chapter/<int:chapter_id>/', views.delete_chapter, name='delete_chapter'),
 
         path('like_chapter/<int:chapter_id>', views.like_chapter, name='like_chapter'),
-        path('buy_chapter/<int:chapter_id>', views.buy_chapter, name='buy_chapter'),
         path('rate_comic/<int:comic_id>/<int:rating>', views.rate_comic, name='rate_comic'),
+        path('buy_chapter/<int:chapter_id>', views.buy_chapter, name='buy_chapter'),
         path('toggle_bookmark/<int:comic_id>', views.bookmark_comic, name='toggle_bookmark'),
-
-    ])),
-
-    path('comments/', include([
-
-    ])),
-
-    path('account/', include('django.contrib.auth.urls')),
-    path('signup/', views.register, name='signup'),
-
-    path('user/', include([
-        path('settings/', views.settings, name='settings'),
-        path('buy_coins/', views.market, name='buy_coins'),
         path('delete_history_entry/<int:entry_id>', views.delete_history_entry, name='delete_history_entry'),
-        path('change_username/', views.change_username, name='change_username'),
-        path('change_password/', views.change_password, name='change_password'),
-        path('become_creator/', views.become_creator, name='become_creator'),
     ])),
 ]

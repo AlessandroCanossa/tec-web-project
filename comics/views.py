@@ -1,15 +1,14 @@
-from datetime import datetime
 import json
+from datetime import datetime
 
-from django.contrib.auth.models import Group
-from django.db import IntegrityError
-from django.shortcuts import render, redirect
-from django.http import HttpRequest, Http404, HttpResponse
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.paginator import Paginator
+from django.http import HttpRequest, Http404, HttpResponse
+from django.shortcuts import render, redirect
 
-from .forms import UserForm, ComicForm, ChapterForm, ChapterImageForm
-from .models import Comic, Chapter, User, Library, Rating, BuyList, ChapterImage, Like, CoinsPurchase, ReadHistory, Genre
+from .forms import ComicForm, ChapterForm, ChapterImageForm
+from .models import Comic, Chapter, Rating, Like, Genre, Library, BuyList
+from users.models import User
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -137,28 +136,7 @@ def comic_details(request: HttpRequest, comic_id: int) -> HttpResponse:
     return render(request, 'comics/comic.html', context)
 
 
-@login_required(login_url='comics:login')
-def bookmark_comic(request: HttpRequest, comic_id: int) -> HttpResponse:
-    user = User.objects.get(pk=request.user.id)
-    comic = Comic.objects.get(pk=comic_id)
-    if request.method == 'POST':
-        user.library_set.create(comic=comic)
-        comic.follows += 1
-        comic.save()
-
-        return HttpResponse(status=200)
-
-    elif request.method == 'DELETE':
-        library = user.library_set.get(comic=comic)
-        library.delete()
-        comic.follows -= 1
-        comic.save()
-
-        return HttpResponse(status=200)
-    return HttpResponse(status=403)
-
-
-@login_required(login_url='comics:login')
+@login_required(login_url='users:login')
 def rate_comic(request: HttpRequest, comic_id: int, rating: int) -> HttpResponse:
     user = User.objects.get(pk=request.user.id)
     comic = Comic.objects.get(pk=comic_id)
@@ -190,81 +168,7 @@ def rate_comic(request: HttpRequest, comic_id: int, rating: int) -> HttpResponse
     return HttpResponse(status=200)
 
 
-def register(request: HttpRequest) -> HttpResponse:
-    if request.method == 'GET':
-        form = UserForm()
-        context = {
-            'form': form
-        }
-        return render(request, 'registration/signup.html', context)
-
-    if request.method == 'POST':
-        form = UserForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('comics:login')
-        else:
-            context = {
-                'form': form,
-            }
-            return render(request, 'registration/signup.html', context)
-
-
-@login_required(login_url='comics:login')
-def settings(request: HttpRequest) -> HttpResponse:
-    user = User.objects.get(pk=request.user.id)
-
-    if request.method == 'GET':
-        library = user.library_set.all()
-
-        comments = user.comment_set.order_by('-created_on')
-
-        history = user.readhistory_set.order_by('-date')
-
-        buy_list = user.buylist_set.order_by('-date')
-
-        my_comics = user.comic_set.all()
-
-        context = {
-            'lib_comics': library,
-            'comments': comments,
-            'history': history,
-            'buy_list': buy_list,
-            'my_comics': my_comics
-        }
-
-        return render(request, 'comics/settings.html', context)
-
-
-@login_required(login_url='comics:login')
-def buy_chapter(request: HttpRequest, chapter_id: int) -> HttpResponse:
-    if request.method == 'POST':
-        user = User.objects.get(pk=request.user.id)
-
-        try:
-            chapter = Chapter.objects.get(pk=chapter_id)
-        except Chapter.DoesNotExist:
-            raise Http404("Chapter does not exist")
-
-        try:
-            user.buylist_set.get(chapter=chapter)
-            message = "already bought"
-        except BuyList.DoesNotExist:
-            if user.coins >= chapter.cost:
-                user.coins -= chapter.cost
-                user.save()
-                user.buylist_set.create(chapter=chapter)
-                message = "Successfully bought chapter"
-            else:
-                message = "Not enough coins"
-
-        context = {
-            'message': message,
-        }
-        return HttpResponse(json.dumps(context), status=200)
-
-
-@login_required(login_url='comics:login')
+@login_required(login_url='users:login')
 def chapter_details(request: HttpRequest, comic_id: int, chapter_id: int) -> Http404 | HttpResponse:
     user = User.objects.get(pk=request.user.id)
 
@@ -333,7 +237,7 @@ def chapter_details(request: HttpRequest, comic_id: int, chapter_id: int) -> Htt
     return render(request, 'comics/chapter.html', context)
 
 
-@login_required(login_url='comics:login')
+@login_required(login_url='users:login')
 def like_chapter(request: HttpRequest, chapter_id: int) -> HttpResponse:
     user = User.objects.get(pk=request.user.id)
     chapter = Chapter.objects.get(pk=chapter_id)
@@ -353,88 +257,7 @@ def like_chapter(request: HttpRequest, chapter_id: int) -> HttpResponse:
     return HttpResponse(status=200)
 
 
-@login_required(login_url='comics:login')
-def market(request: HttpRequest) -> HttpResponse:
-    if request.method == 'POST':
-        user = User.objects.get(pk=request.user.id)
-        try:
-            amount = int(request.POST.get('coins_amount'))
-        except ValueError:
-            message = 'Insert a valid amount of coins'
-            return HttpResponse(message, status=400)
-        user.coinspurchase_set.create(coins=amount)
-        user.coins += amount
-        user.save()
-
-        message = f"Successfully purchased {amount} coins"
-
-        return HttpResponse(message, status=200)
-    else:
-        return render(request, 'comics/market.html')
-
-
-@login_required(login_url='comics:login')
-def delete_history_entry(request: HttpRequest, entry_id: int) -> HttpResponse:
-    if request.method == 'DELETE':
-        user = User.objects.get(pk=request.user.id)
-        user.readhistory_set.get(pk=entry_id).delete()
-        return HttpResponse(status=200)
-
-
-@login_required(login_url='comics:login')
-def change_username(request: HttpRequest) -> HttpResponse:
-    if request.method == 'POST':
-        user = User.objects.get(pk=request.user.id)
-        try:
-            new_username = request.POST.get('username')
-            print(new_username)
-            if new_username:
-                user.username = new_username
-                user.save()
-            else:
-                return HttpResponse('Invalid username', status=400)
-        except IntegrityError:
-            return HttpResponse('Username already taken', status=400)
-
-        return HttpResponse('Username changed successfully', status=200)
-
-
-@login_required(login_url='comics:login')
-def change_password(request: HttpRequest) -> HttpResponse:
-    if request.method == 'POST':
-        user = User.objects.get(pk=request.user.id)
-        old_password: str = request.POST.get('old_password')
-        new_password: str = request.POST.get('new_password')
-        confirm_password: str = request.POST.get('confirm_password')
-
-        print(old_password, new_password, confirm_password)
-
-        if not user.check_password(old_password):
-            return HttpResponse('Invalid old password', status=400)
-
-        if new_password != confirm_password:
-            return HttpResponse('Passwords do not match', status=400)
-
-        if new_password == old_password:
-            return HttpResponse('New password must be different from old password', status=400)
-
-        user.set_password(new_password)
-        user.save()
-
-        return HttpResponse('Password changed successfully', status=200)
-
-
-@login_required(login_url='comics:login')
-def become_creator(request: HttpRequest) -> HttpResponse:
-    if request.method == 'POST':
-        user = User.objects.get(pk=request.user.id)
-        user.is_creator = True
-        user.groups.add(Group.objects.get(name='creator'))
-        user.save()
-        return HttpResponse('You are now a creator', status=200)
-
-
-@login_required(login_url='comics:login')
+@login_required(login_url='users:login')
 @permission_required('comics.delete_comic')
 def delete_comic(request: HttpRequest, comic_id: int) -> HttpResponse:
     if request.method == 'DELETE':
@@ -449,7 +272,7 @@ def delete_comic(request: HttpRequest, comic_id: int) -> HttpResponse:
         return HttpResponse('Comic deleted successfully', status=200)
 
 
-@login_required(login_url='comics:login')
+@login_required(login_url='users:login')
 @permission_required('comics.delete_chapter')
 def delete_chapter(request: HttpRequest, chapter_id: int) -> HttpResponse:
     if request.method == 'DELETE':
@@ -463,7 +286,7 @@ def delete_chapter(request: HttpRequest, chapter_id: int) -> HttpResponse:
         return HttpResponse('Chapter deleted successfully', status=200)
 
 
-@login_required(login_url='comics:login')
+@login_required(login_url='users:login')
 @permission_required('comics.add_comic')
 def new_comic(request: HttpRequest) -> HttpResponse:
     user = User.objects.get(pk=request.user.id)
@@ -489,7 +312,7 @@ def new_comic(request: HttpRequest) -> HttpResponse:
             return render(request, 'comics/new_comic.html', {'form': form})
 
 
-@login_required(login_url='comics:login')
+@login_required(login_url='users:login')
 @permission_required('comics.add_chapter')
 def new_chapter(request: HttpRequest, comic_id: int) -> HttpResponse:
     comic = Comic.objects.get(pk=comic_id)
@@ -533,7 +356,7 @@ def new_chapter(request: HttpRequest, comic_id: int) -> HttpResponse:
     return render(request, 'comics/new_chapter.html')
 
 
-@login_required(login_url='comics:login')
+@login_required(login_url='users:login')
 @permission_required('comics.modify_comic')
 def change_comic_status(request: HttpRequest, comic_id: int, status_id: str) -> HttpResponse:
     if request.method == 'PUT':
@@ -547,3 +370,60 @@ def change_comic_status(request: HttpRequest, comic_id: int, status_id: str) -> 
         comic.save()
 
         return HttpResponse('Comic status changed successfully', status=200)
+
+
+@login_required(login_url='users:login')
+def buy_chapter(request: HttpRequest, chapter_id: int) -> HttpResponse:
+    if request.method == 'POST':
+        user = User.objects.get(pk=request.user.id)
+
+        try:
+            chapter = Chapter.objects.get(pk=chapter_id)
+        except Chapter.DoesNotExist:
+            raise Http404("Chapter does not exist")
+
+        try:
+            user.buylist_set.get(chapter=chapter)
+            message = "already bought"
+        except BuyList.DoesNotExist:
+            if user.coins >= chapter.cost:
+                user.coins -= chapter.cost
+                user.save()
+                user.buylist_set.create(chapter=chapter)
+                message = "Successfully bought chapter"
+            else:
+                message = "Not enough coins"
+
+        context = {
+            'message': message,
+        }
+        return HttpResponse(json.dumps(context), status=200)
+
+
+@login_required(login_url='users:login')
+def bookmark_comic(request: HttpRequest, comic_id: int) -> HttpResponse:
+    user = User.objects.get(pk=request.user.id)
+    comic = Comic.objects.get(pk=comic_id)
+    if request.method == 'POST':
+        user.library_set.create(comic=comic)
+        comic.follows += 1
+        comic.save()
+
+        return HttpResponse(status=200)
+
+    elif request.method == 'DELETE':
+        library = user.library_set.get(comic=comic)
+        library.delete()
+        comic.follows -= 1
+        comic.save()
+
+        return HttpResponse(status=200)
+    return HttpResponse(status=403)
+
+
+@login_required(login_url='users:login')
+def delete_history_entry(request: HttpRequest, entry_id: int) -> HttpResponse:
+    if request.method == 'DELETE':
+        user = User.objects.get(pk=request.user.id)
+        user.readhistory_set.get(pk=entry_id).delete()
+        return HttpResponse(status=200)

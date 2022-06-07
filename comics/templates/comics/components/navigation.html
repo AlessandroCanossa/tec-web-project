@@ -30,26 +30,26 @@
 							</li>
 						{% endif %}
 						<li>
-							<a href="{% url 'comics:buy_coins' %}" class="dropdown-item">
+							<a href="{% url 'users:buy_coins' %}" class="dropdown-item">
 								{{ user.coins }}
 								<i class="fas fa-coins"></i>
 							</a>
 						</li>
-						<li><a class="dropdown-item" href="{% url 'comics:settings' %}">User settings</a></li>
+						<li><a class="dropdown-item" href="{% url 'users:settings' %}">User settings</a></li>
 						<li>
 							<hr class="dropdown-divider">
 						</li>
-						<li><a class="dropdown-item" href="{% url 'comics:logout' %}">Sign out</a></li>
+						<li><a class="dropdown-item" href="{% url 'users:logout' %}">Sign out</a></li>
 					</ul>
 				</div>
 			{% else %}
 				<div class="text-end">
-					<a href="{% url 'comics:login' %}" class="text-decoration-none">
+					<a href="{% url 'users:login' %}" class="text-decoration-none">
 						<button type="button" class="btn btn-outline-light me-2">
 							Sign in
 						</button>
 					</a>
-					<a href="{% url 'comics:signup' %}" class="text-decoration-none">
+					<a href="{% url 'users:signup' %}" class="text-decoration-none">
 						<button type="button" class="btn btn-warning">
 							Sign up
 						</button>

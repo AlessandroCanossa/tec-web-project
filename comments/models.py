@@ -1,9 +1,10 @@
 from django.db import models
 
-from comics.models import Chapter, User
-
-
 # Create your models here.
+from users.models import User
+from comics.models import Chapter
+
+
 class Comment(models.Model):
     chapter = models.ForeignKey(to=Chapter, on_delete=models.CASCADE)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)

@@ -1,6 +1,6 @@
 const deleteHistoryEntry = (id) => {
   $.ajax({
-    url: `/user/delete_history_entry/${id}`,
+    url: `/comics/delete_history_entry/${id}`,
     type: 'DELETE',
     headers: {
       'X-CSRFToken': csrftoken

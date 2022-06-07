@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users',
     'comics',
     'comments',
     'django_filters',
@@ -128,7 +129,7 @@ MEDIA_ROOT = BASE_DIR.joinpath(MEDIA_URL)
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'comics.User'
+AUTH_USER_MODEL = 'users.User'
 
 LOGIN_REDIRECT_URL = 'comics:index'
 LOGOUT_REDIRECT_URL = "comics:index"
