@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.core.paginator import Paginator
 
 from .forms import UserForm, ComicForm, ChapterForm, ChapterImageForm
-from .models import Comic, Chapter, User, Library, Rating, BuyList, ChapterImage, Like, Comment, CoinsPurchase, ReadHistory
+from .models import Comic, Chapter, User, Library, Rating, BuyList, ChapterImage, Like, Comment, CoinsPurchase, ReadHistory, Genre
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -46,27 +46,51 @@ def index(request: HttpRequest) -> HttpResponse:
 
 # TODO: finish this
 def comics_list(request: HttpRequest) -> HttpResponse:
-    comics = None
-    try:
-        for key, param in request.GET.lists():
-            if key == 'g':
-                comics = Comic.objects.filter(genre__in=param)
-            elif key == 'name':
-                comics = Comic.objects.get(title__contains=param)
-            else:
-                comics = Comic.objects.all()
-    except Comic.DoesNotExist:
-        ...
+    if request.method == 'GET':
+        name = request.GET.get('p')
+        genres = request.GET.getlist('g')
+        status = request.GET.get('s')
+        order_by = request.GET.get('o')
+        try:
+            page = int(request.GET.get('page'))
+        except (ValueError, TypeError):
+            page = 1
 
-    if comics:
-        comics = set(comics)
+        if name:
+            comics = Comic.objects.filter(title__contains=name)
+        elif genres:
+            comics = Comic.objects.filter(genre__in=genres).distinct()
+        elif status:
+            comics = Comic.objects.filter(status=status)
+        else:
+            comics = Comic.objects.all()
 
-    print(comics)
-    context = {
-        'comics': comics
-    }
+        if order_by == 'rating_up':
+            comics = comics.order_by('-rating')
+        elif order_by == 'rating_down':
+            comics = comics.order_by('rating')
+        elif order_by == 'alpha_up':
+            comics = comics.order_by('title')
+        elif order_by == 'alpha_down':
+            comics = comics.order_by('-title')
+        elif order_by == 'views_up':
+            comics = comics.order_by('-watches')
+        elif order_by == 'views_down':
+            comics = comics.order_by('watches')
 
-    return render(request, 'comics/series.html', context)
+        comics_page = Paginator(comics, 10)
+
+        context = {
+            'comics': comics_page.get_page(page).object_list,
+            'next': comics_page.get_page(page).has_next(),
+            'next_page': page + 1,
+            'prev': comics_page.get_page(page).has_previous(),
+            'prev_page': page - 1,
+            'genres': Genre.objects.all(),
+            'status': Comic.STATUS,
+        }
+
+        return render(request, 'comics/series.html', context)
 
 
 def comic_details(request: HttpRequest, comic_id: int) -> HttpResponse:

@@ -1,5 +1,131 @@
 {% extends "comics/base.html" %}
+{% load query_transform %}
+{% load static %}
 
 {% block head %}
 	<title>Series</title>
+	<link href="{% static 'comics/css/card.css' %}" rel="stylesheet"/>
+	<link type="text/css" rel="stylesheet" href="{% static 'comics/css/index.css' %}">
+{% endblock %}
+
+{% block main %}
+	<div class="container mt-5" style="padding: 0 100px">
+		<h1>Series</h1>
+
+		<form id="searchForm" class="align-items-center d-flex flex-column">
+			<div class="input-group justify-content-between w-50">
+				<div class="mb-3">
+					<button class="dropdown-toggle btn btn-secondary " type="button" id="dropdownMenuButton"
+					        data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+						Genres
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						{% for genre in genres %}
+							<li>
+								<div class="dropdown-item">
+									<input type="checkbox" name="g" value="{{ genre.id }}"
+									       id="genre{{ genre.id }}">
+									<label for="genre{{ genre.id }}">{{ genre.name }}</label>
+								</div>
+							</li>
+						{% endfor %}
+					</ul>
+					{{ form.genres.errors }}
+				</div>
+				<div class="mb-3">
+					<button class="dropdown-toggle btn btn-secondary " type="button" id="dropdownMenuButton"
+					        data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+						Status
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						{% for id, val in status %}
+							<li>
+								<div class="dropdown-item">
+									<input type="checkbox" name="s" value="{{ id }}"
+									       id="status_{{ id }}">
+									<label for="status_{{ id }}">{{ val }}</label>
+								</div>
+							</li>
+						{% endfor %}
+					</ul>
+					{{ form.genres.errors }}
+				</div>
+				<div class="mb-3">
+					<button class="dropdown-toggle btn btn-secondary " type="button" id="dropdownMenuButton"
+					        data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+						Order by
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						<li>
+							<div class="dropdown-item form-check">
+								<input type="radio" name="o" value="rating_up" id="rating_up">
+								<label for="rating_up">Rating up</label>
+							</div>
+						</li>
+						<li>
+							<div class="dropdown-item form-check">
+								<input type="radio" name="o" value="rating_down" id="rating_down">
+								<label for="rating_down">Rating down</label>
+							</div>
+						</li>
+						<li>
+							<div class="dropdown-item form-check">
+								<input type="radio" name="o" value="alpha_up" id="alpha_up">
+								<label for="alpha_up">A-Z</label>
+							</div>
+						</li>
+						<li>
+							<div class="dropdown-item form-check">
+								<input type="radio" name="o" value="alpha_down" id="alpha_down">
+								<label for="alpha_down">Z-A</label>
+							</div>
+						</li>
+						<li>
+							<div class="dropdown-item form-check">
+								<input type="radio" name="o" value="views_up" id="views_up">
+								<label for="views_up">Most Popular</label>
+							</div>
+						</li>
+						<li>
+							<div class="dropdown-item form-check">
+								<input type="radio" name="o" value="views_down" id="views_down">
+								<label for="views_down">Less Popular</label>
+							</div>
+						</li>
+					</ul>
+					{{ form.genres.errors }}
+				</div>
+
+			</div>
+
+
+			<button type="submit" class="btn btn-dark w-75">Search</button>
+		</form>
+
+		<div class="card_list p-0 mt-5">
+			{% for comic in comics %}
+				{% include 'comics/components/card.html' %}
+			{% endfor %}
+		</div>
+
+		{#TODO: finish this	#}
+		<nav class="mt-5">
+			<ul class="pagination justify-content-center">
+				{% if not prev %}
+					<li class="page-item disabled">
+						{% else %}
+					<li class="page-item">
+				{% endif %}
+				<a href="?{% query_transform page=prev_page %}" class="page-link">Previous</a>
+				</li>
+				{% if not next %}
+					<li class="page-item disabled">
+						{% else %}
+					<li class="page-item">
+				{% endif %}
+				<a class="page-link" href="?{% query_transform page=next_page %}">Next</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
 {% endblock %}
