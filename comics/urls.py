@@ -25,8 +25,7 @@ urlpatterns = [
     ])),
 
     path('comments/', include([
-        path('add/<int:chapter_id>', views.add_comment, name='add_comment'),
-        path('delete/<int:comment_id>', views.delete_comment, name='delete_comment'),
+
     ])),
 
     path('account/', include('django.contrib.auth.urls')),
