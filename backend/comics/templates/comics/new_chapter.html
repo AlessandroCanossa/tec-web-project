@@ -1,0 +1,30 @@
+{% extends 'comics/base.html' %}
+{% load widget_tweaks %}
+
+{% block head %}
+	<title>New Comic</title>
+{% endblock %}
+
+{% block main %}
+	<div class="container mt-5 w-75">
+		<h1>Add new chapter to: {{ comic.title }}</h1>
+		<form action="{% url 'comics:add_new_chapter' comic_id=comic.id %}" method="post" enctype="multipart/form-data">
+			{% csrf_token %}
+			<div class="mb-3">
+				<label for="id_chapter_number" class="form-label">{{ ch_form.chapter_number.label }}</label>
+				{% render_field ch_form.chapter_number class+="form-control" placeholder="Chapter number" %}
+				{{ ch_form.chapter_number.errors }}
+			</div>
+			<div class="mb-3">
+				<label for="id_images" class="form-label">{{ img_form.images.label }}</label>
+				{% render_field img_form.images class+="form-control" placeholder="Images" %}
+				{{ img_form.images.errors }}
+			</div>
+
+			<button type="submit" class="btn btn-dark">Add new chapter</button>
+		</form>
+	</div>
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}

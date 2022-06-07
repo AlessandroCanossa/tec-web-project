@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import User, Comic, Genre
+from .models import User, Comic, Genre, Chapter, ChapterImage
 
 
 class UserForm(UserCreationForm):
@@ -33,3 +33,23 @@ class ComicForm(forms.ModelForm):
     class Meta:
         model = Comic
         fields = ['title', 'summary', 'cover', 'genres']
+
+
+class ChapterForm(forms.ModelForm):
+    chapter_number = forms.IntegerField(required=True, help_text='Enter Chapter Number', min_value=0)
+
+    class Meta:
+        model = Chapter
+        fields = ['chapter_number']
+
+
+class ChapterImageForm(forms.ModelForm):
+    images = forms.ImageField(
+        required=True,
+        help_text='Upload Chapter Images',
+        widget=forms.ClearableFileInput(attrs={'multiple': True})
+    )
+
+    class Meta:
+        model = ChapterImage
+        fields = ['images']

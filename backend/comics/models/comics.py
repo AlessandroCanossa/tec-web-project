@@ -69,7 +69,7 @@ class ChapterImage(models.Model):
     def get_upload_to(self, field_name):
         chapter_name = self.chapter.chapter_num
         comic_name = self.chapter.comic.title.lower().replace(' ', '-')
-        return f'chapter/{comic_name}/{chapter_name}'
+        return f'chapter/{comic_name}/chapter-{chapter_name}'
 
     def delete(self, using=None, keep_parents=False):
         self.image.delete()

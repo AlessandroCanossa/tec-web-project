@@ -8,7 +8,7 @@ from django.http import HttpRequest, Http404, HttpResponse
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.paginator import Paginator
 
-from .forms import UserForm, ComicForm
+from .forms import UserForm, ComicForm, ChapterForm, ChapterImageForm
 from .models import Comic, Chapter, User, Library, Rating, BuyList, ChapterImage, Like, Comment, CoinsPurchase, ReadHistory
 
 
@@ -259,10 +259,11 @@ def chapter_details(request: HttpRequest, comic_id: int, chapter_id: int) -> Htt
     except Chapter.DoesNotExist:
         return Http404("Chapter does not exist")
 
-    try:
-        user.buylist_set.get(chapter=chapter)
-    except BuyList.DoesNotExist:
-        return redirect('comics:comic_detail', comic_id)
+    if chapter.comic.creator_id != user.id:
+        try:
+            user.buylist_set.get(chapter=chapter)
+        except BuyList.DoesNotExist:
+            return redirect('comics:comic_detail', comic_id)
 
     comic.watches += 1
     comic.save()
@@ -273,17 +274,23 @@ def chapter_details(request: HttpRequest, comic_id: int, chapter_id: int) -> Htt
         user_history[0].date = datetime.now().date()
         user_history[0].save()
 
-    images = chapter.chapterimage_set.all()
+    images = chapter.chapterimage_set.order_by('image')
 
     chapter_list = comic.chapter_set.all()
 
     prev_chapter = None
     next_chapter = None
     if chapter.chapter_num > 0:
-        prev_chapter = comic.chapter_set.get(chapter_num=(chapter.chapter_num - 1))
+        try:
+            prev_chapter = comic.chapter_set.get(chapter_num=(chapter.chapter_num - 1))
+        except Chapter.DoesNotExist:
+            pass
 
     if chapter.chapter_num < chapter_list.count() - 1:
-        next_chapter = comic.chapter_set.get(chapter_num=(chapter.chapter_num + 1))
+        try:
+            next_chapter = comic.chapter_set.get(chapter_num=(chapter.chapter_num + 1))
+        except Chapter.DoesNotExist:
+            pass
 
     print(prev_chapter, next_chapter)
 
@@ -473,11 +480,8 @@ def delete_chapter(request: HttpRequest, chapter_id: int) -> HttpResponse:
 
 @login_required(login_url='comics:login')
 @permission_required('comics.add_comic')
-def new_comic(request):
+def new_comic(request: HttpRequest) -> HttpResponse:
     user = User.objects.get(pk=request.user.id)
-
-    if not user.is_creator:
-        return HttpResponse('You are not a creator', status=403)
 
     if request.method == 'GET':
         form = ComicForm()
@@ -486,7 +490,6 @@ def new_comic(request):
     if request.method == 'POST':
         form = ComicForm(request.POST, request.FILES)
         if form.is_valid():
-            user = User.objects.get(pk=request.user.id)
             comic = user.comic_set.create(
                 title=form.cleaned_data['title'],
                 summary=form.cleaned_data['summary'],
@@ -499,10 +502,47 @@ def new_comic(request):
             return redirect('comics:comic_detail', comic_id=comic.id)
         else:
             return render(request, 'comics/new_comic.html', {'form': form})
-    return render(request, 'comics/new_comic.html')
 
 
 @login_required(login_url='comics:login')
 @permission_required('comics.add_chapter')
-def new_chapter(request):
-    return None
+def new_chapter(request: HttpRequest, comic_id: int) -> HttpResponse:
+    comic = Comic.objects.get(pk=comic_id)
+    user = User.objects.get(pk=request.user.id)
+
+    if user.id != comic.creator_id:
+        return HttpResponse('You cannot add a chapter to this comic', status=403)
+
+    if request.method == 'GET':
+        ch_form = ChapterForm()
+        img_form = ChapterImageForm()
+        context = {
+            'ch_form': ch_form,
+            'img_form': img_form,
+            'comic': comic
+        }
+        return render(request, 'comics/new_chapter.html', context)
+
+    if request.method == 'POST':
+        # print(request.FILES, request.POST)
+        ch_form = ChapterForm(request.POST)
+        img_form = ChapterImageForm(request.POST, request.FILES)
+        images = request.FILES.getlist('images')
+        if ch_form.is_valid() and img_form.is_valid():
+            chapter = comic.chapter_set.create(
+                chapter_num=ch_form.cleaned_data['chapter_number'],
+            )
+            for image in images:
+                chapter.chapterimage_set.create(
+                    image=image
+                )
+            return redirect('comics:comic_detail', comic_id=comic.id)
+        else:
+            context = {
+                'ch_form': ch_form,
+                'img_form': img_form,
+                'comic': comic
+            }
+            return render(request, 'comics/new_chapter.html', context)
+
+    return render(request, 'comics/new_chapter.html')
