@@ -565,3 +565,19 @@ def new_chapter(request: HttpRequest, comic_id: int) -> HttpResponse:
             return render(request, 'comics/new_chapter.html', context)
 
     return render(request, 'comics/new_chapter.html')
+
+
+@login_required(login_url='comics:login')
+@permission_required('comics.modify_comic')
+def change_comic_status(request: HttpRequest, comic_id: int, status_id: str) -> HttpResponse:
+    if request.method == 'PUT':
+        user = User.objects.get(pk=request.user.id)
+        comic = Comic.objects.get(pk=comic_id)
+
+        if user.id != comic.creator_id:
+            return HttpResponse('You cannot change the status of this comic', status=403)
+
+        comic.status = status_id
+        comic.save()
+
+        return HttpResponse('Comic status changed successfully', status=200)

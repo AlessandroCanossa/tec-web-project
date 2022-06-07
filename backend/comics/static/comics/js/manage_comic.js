@@ -14,3 +14,20 @@ const deleteComic = (comicId) => {
     }
   })
 }
+
+const updateStatus = (statusId, comicId) => {
+  $.ajax({
+    url: `/comics/${comicId}/status/${statusId}/`,
+    type: 'PUT',
+    headers: {
+      'X-CSRFToken': csrftoken
+    },
+    success: (result) => {
+      alert(result);
+      location.reload()
+    },
+    error: (xhr, _ajaxOptions, _thrownError) => {
+      alert(xhr.responseText);
+    }
+  })
+}

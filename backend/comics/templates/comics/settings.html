@@ -200,6 +200,21 @@
 									<div class='d-flex flex-column'>
 										<h5 class='card-title mb-0 me-2'>{{ comic.title }}</h5>
 										<span class='card-subtitle'>
+											{% if comic.status == 'O' %}
+												<i class="fa-solid fa-circle status_dot ongoing"></i>
+												<span class="status">Ongoing</span>
+											{% elif comic.status == 'H' %}
+												<i class="fa-solid fa-circle status_dot hiatus"></i>
+												<span class="status">Hiatus</span>
+											{% elif comic.status == 'C' %}
+												<i class="fa-solid fa-circle status_dot completed"></i>
+												<span class="status">Completed</span>
+											{% elif comic.status == 'D' %}
+												<i class="fa-solid fa-circle status_dot cancelled"></i>
+												<span class="status">Cancelled</span>
+											{% endif %}
+										</span>
+										<span class='card-subtitle'>
 											<i class="fas fa-star star px-0"></i>
 											{{ comic.rating }}
 										</span>
@@ -213,7 +228,26 @@
 											{{ comic.watches }}
 										</span>
 									</div>
-									<div class="">
+									<div class="d-flex flex-row">
+										<div class="me-1">
+											<button class="dropdown-toggle btn btn-secondary " type="button"
+											        id="dropdownMenuButton"
+											        data-bs-toggle="dropdown" aria-expanded="false"
+											        data-bs-auto-close="outside">
+												Update Status
+											</button>
+											<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+												{% for id, val in comic.STATUS %}
+													<li>
+														<button class="dropdown-item"
+														        onclick="updateStatus('{{ id }}', {{ comic.id }})">
+															{{ val }}
+														</button>
+													</li>
+												{% endfor %}
+											</ul>
+										</div>
+
 										<a href="{% url 'comics:comic_detail' comic_id=comic.id %}"
 										   class="btn btn-dark me-1">
 											View
