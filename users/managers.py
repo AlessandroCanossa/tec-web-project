@@ -13,6 +13,10 @@ class UserManager(base_user.BaseUserManager):
         """
         if not email:
             raise ValueError('The Email must be set')
+        if not password:
+            raise ValueError('The password must be set')
+        if not username:
+            raise ValueError('The username must be set')
 
         email = self.normalize_email(email)
         user = self.model(email=email, username=username,

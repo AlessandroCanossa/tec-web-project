@@ -1,11 +1,13 @@
+from hashlib import new
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
+from django.contrib.auth.forms import PasswordChangeForm
 from django.db import IntegrityError
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
-from users.forms import UserForm
+from users.forms import UsernameChangeForm, UserForm
 from users.models import User
 
 
@@ -62,7 +64,7 @@ def market(request: HttpRequest) -> HttpResponse:
         try:
             amount = int(request.POST.get('coins_amount'))
 
-            if amount < 0:
+            if amount <= 0:
                 raise ValueError
         except ValueError:
             message = 'Insert a valid amount of coins'
@@ -81,11 +83,11 @@ def market(request: HttpRequest) -> HttpResponse:
 @login_required(login_url='users:login')
 def change_username(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
-        user = User.objects.get(pk=request.user.id)
+        user: User = User.objects.get(pk=request.user.id)
         try:
-            new_username = request.POST.get('username')
-            print(new_username)
-            if new_username:
+            form = UsernameChangeForm(request.POST)
+            if form.is_valid():
+                new_username = form.cleaned_data['username']
                 user.username = new_username
                 user.save()
             else:
@@ -100,25 +102,15 @@ def change_username(request: HttpRequest) -> HttpResponse:
 def change_password(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
         user = User.objects.get(pk=request.user.id)
-        old_password: str = request.POST.get('old_password')
-        new_password: str = request.POST.get('new_password')
-        confirm_password: str = request.POST.get('confirm_password')
 
-        print(old_password, new_password, confirm_password)
+        form = PasswordChangeForm(user, request.POST)
 
-        if not user.check_password(old_password):
-            return HttpResponse('Invalid old password', status=400)
+        if form.is_valid():
+            form.save()
+            return HttpResponse('Password changed successfully', status=200)
 
-        if new_password != confirm_password:
-            return HttpResponse('Passwords do not match', status=400)
-
-        if new_password == old_password:
-            return HttpResponse('New password must be different from old password', status=400)
-
-        user.set_password(new_password)
-        user.save()
-
-        return HttpResponse('Password changed successfully', status=200)
+        else:
+            return HttpResponse(form.error_messages, status=400)
 
 
 @login_required(login_url='users:login')
