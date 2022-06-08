@@ -21,29 +21,3 @@ const deleteComment = (commentId) => {
     },
   });
 };
-
-const likeComment = (commentId) => {
-  $.ajax({
-    url: `/comments/like/${commentId}`,
-    type: "POST",
-    headers: {
-      "X-CSRFToken": csrftoken,
-    },
-    success: (data) => {
-      location.reload();
-    },
-  });
-};
-
-const dislikeComment = (commentId) => {
-  $.ajax({
-    url: `/comments/dislike/${commentId}`,
-    type: "POST",
-    headers: {
-      "X-CSRFToken": csrftoken,
-    },
-    success: (data) => {
-      location.reload();
-    },
-  });
-};

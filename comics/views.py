@@ -13,7 +13,6 @@ from users.models import User
 
 def index(request: HttpRequest) -> HttpResponse:
     latest_chapters = Chapter.objects.order_by('-pub_date')
-    # latest_chapters = set(latest_chapters)
     paginator = Paginator(latest_chapters, 10)
     latest_updates = []
 
@@ -214,8 +213,6 @@ def chapter_details(request: HttpRequest, comic_id: int, chapter_id: int) -> Htt
             next_chapter = comic.chapter_set.get(chapter_num=(chapter.chapter_num + 1))
         except Chapter.DoesNotExist:
             pass
-
-    print(prev_chapter, next_chapter)
 
     try:
         like = user.like_set.get(chapter=chapter)

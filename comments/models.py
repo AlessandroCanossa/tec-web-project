@@ -15,19 +15,3 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'Comment {self.body} by {self.user.username}'
-
-
-class CommentLike(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    comment = models.ForeignKey(to=Comment, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f'{self.user.username} likes {self.comment.body}'
-
-
-class CommentDislike(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    comment = models.ForeignKey(to=Comment, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f'{self.user.username} dislikes {self.comment.body}'
