@@ -1,24 +1,49 @@
 const removeReply = () => {
-  $('#replyBox').hide();
-  $('#replyId').val('');
-}
+  $("#replyBox").hide();
+  $("#replyId").val("");
+};
 const postReply = (commentId, username) => {
   $("#replyId").val(commentId);
-  $('#replyBox').show();
+  $("#replyBox").show();
   $("#replyTo").text(`Reply to ${username}`);
-  $('#newComment').focus();
-}
+  $("#newComment").focus();
+};
 
 const deleteComment = (commentId) => {
   $.ajax({
     url: `/comments/delete/${commentId}`,
-    type: 'DELETE',
+    type: "DELETE",
     headers: {
-      'X-CSRFToken': csrftoken
+      "X-CSRFToken": csrftoken,
     },
     success: (data) => {
       location.reload();
-    }
+    },
   });
-}
+};
 
+const likeComment = (commentId) => {
+  $.ajax({
+    url: `/comments/like/${commentId}`,
+    type: "POST",
+    headers: {
+      "X-CSRFToken": csrftoken,
+    },
+    success: (data) => {
+      location.reload();
+    },
+  });
+};
+
+const dislikeComment = (commentId) => {
+  $.ajax({
+    url: `/comments/dislike/${commentId}`,
+    type: "POST",
+    headers: {
+      "X-CSRFToken": csrftoken,
+    },
+    success: (data) => {
+      location.reload();
+    },
+  });
+};

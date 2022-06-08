@@ -20,7 +20,8 @@ def add_comment(request: HttpRequest, chapter_id: int) -> HttpResponse | Http404
         body = request.POST.get('comment')
 
         if reply_id:
-            user.comment_set.create(chapter=chapter, body=body, reply_id=reply_id)
+            user.comment_set.create(
+                chapter=chapter, body=body, reply_id=reply_id)
         else:
             user.comment_set.create(chapter=chapter, body=body)
 
@@ -39,3 +40,27 @@ def delete_comment(request: HttpRequest, comment_id: int) -> HttpResponse | Http
             return HttpResponse(status=200)
 
         return HttpResponse(status=403)
+
+
+@login_required(login_url='users:login')
+def like_comment(request: HttpRequest, comment_id: int) -> HttpResponse | Http404:
+    if request.method == 'POST':
+        try:
+            comment = Comment.objects.get(pk=comment_id)
+        except Comment.DoesNotExist:
+            return Http404("Comment does not exist")
+        user = User.objects.get(pk=request.user.id)
+        comment.commentlike_set.create(user=user)
+        return HttpResponse(status=200)
+
+
+@login_required(login_url='users:login')
+def dislike_comment(request: HttpRequest, comment_id: int) -> HttpResponse | Http404:
+    if request.method == 'POST':
+        try:
+            comment = Comment.objects.get(pk=comment_id)
+        except Comment.DoesNotExist:
+            return Http404("Comment does not exist")
+        user = User.objects.get(pk=request.user.id)
+        comment.commentdislike_set.create(user=user)
+        return HttpResponse(status=200)
