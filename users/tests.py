@@ -2,6 +2,7 @@ from django.db import IntegrityError
 from django.urls import reverse
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 
 from users.models import CoinsPurchase, User
 
@@ -307,3 +308,45 @@ class UserViewTest(TestCase):
 
         coins_purchase = CoinsPurchase.objects.filter(user=user)
         self.assertEqual(coins_purchase.count(), 0)
+
+    def test_become_creator(self):
+        Group.objects.create(name='creator')
+        self.client.login(username='prova', password='foo')
+
+        user = self.User.objects.get(
+            id=self.client.session.get('_auth_user_id'))
+        self.assertFalse(user.is_creator)
+
+        response = self.client.post(
+            reverse('users:become_creator'),
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        user.refresh_from_db()
+        self.assertTrue(user.is_creator)
+
+    def test_become_creator_not_logged(self):
+        response = self.client.post(
+            reverse('users:become_creator'),
+        )
+
+        self.assertEqual(response.status_code, 302)
+
+    def test_become_creator_already_creator(self):
+        Group.objects.create(name='creator')
+        self.client.login(username='prova', password='foo')
+
+        user = self.User.objects.get(
+            id=self.client.session.get('_auth_user_id'))
+        user.is_creator = True
+        user.save()
+
+        response = self.client.post(
+            reverse('users:become_creator'),
+        )
+
+        self.assertEqual(response.status_code, 400)
+
+        user.refresh_from_db()
+        self.assertTrue(user.is_creator)

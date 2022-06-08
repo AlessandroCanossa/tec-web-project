@@ -117,6 +117,10 @@ def change_password(request: HttpRequest) -> HttpResponse:
 def become_creator(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
         user = User.objects.get(pk=request.user.id)
+
+        if user.is_creator:
+            return HttpResponse('You are already a creator', status=400)
+
         user.is_creator = True
         user.groups.add(Group.objects.get(name='creator'))
         user.save()
