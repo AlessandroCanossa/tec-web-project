@@ -36,3 +36,12 @@ Per accedervi visitare http://localhost:8000/
 Le credenziali di accesso come admin sono:
 - username: admin
 - password: admin
+
+
+### Test
+
+Per eseguire i test eseguire il comando:
+
+```
+python manage.py test
+```
